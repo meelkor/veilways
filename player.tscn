@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://d1t48fst4j8t5"]
+
+[ext_resource type="Script" uid="uid://oaumavmt3u5t" path="res://actor.gd" id="1_4flbx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_883nb"]
+diffuse_mode = 3
+specular_mode = 1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_mbk3n"]
+material = SubResource("StandardMaterial3D_883nb")
+radius = 0.4
+height = 1.8
+
+[node name="Actor" type="Node3D"]
+script = ExtResource("1_4flbx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8443577, 0)
+mesh = SubResource("CapsuleMesh_mbk3n")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.70710677, -0.57060707, 0.41762128, 0, 0.5906057, 0.8069603, -0.70710677, 0.57060707, -0.41762128, 2.5, 5.4, -2.5)
+projection = 1
+current = true
+size = 12.0
