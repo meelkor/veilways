@@ -14,15 +14,17 @@ var _last_direction: Vector3
 
 var _mouse_down: bool = false
 
+func _process(_delta: float) -> void:
+	if _is_free() and _mouse_down:
+		_do_player_action(PlayerAction.MOVE)
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	var btn := event as InputEventMouseButton
+	var motion := event as InputEventMouseMotion
 	if btn and btn.button_index == MOUSE_BUTTON_LEFT:
 		_mouse_down = btn.pressed
-		_try_player_movement()
-
-
-func _try_player_movement() -> void:
-	if _mouse_down and _is_free():
+	if motion:
 		var mosue_pos := get_window().get_mouse_position()
 		var x := (mosue_pos.x / get_window().size.x) * 2 - 1.
 		var z := (mosue_pos.y / get_window().size.y) * 2 - 1.
@@ -36,27 +38,24 @@ func _try_player_movement() -> void:
 		elif x > 0 and z < 0:
 			_last_direction = Vector3(-1, 0, 0)
 
-		await _do_player_action(PlayerAction.MOVE)
-
 
 func _do_player_action(action: PlayerAction, _card: Card = null) -> void:
 	_player_action_in_progress = true
 	if action == PlayerAction.MOVE:
-		await _move_in_direction(_player, _last_direction)
+		await _try_move_in_direction(_player, _last_direction)
 	_player_action_in_progress = false
 	# elif use card and assert card do card effect
 	_npc_action_in_progress = true
 	await _do_npc_logic()
 	_npc_action_in_progress = false
-	# fuck infinite recursion?
-	_try_player_movement()
 
 
-func _move_in_direction(actor: Actor, direction: Vector3) -> void:
+## Returns whether the actor actually moved in given direction
+func _try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
 	var next_coord := _get_coordinate_in_direction(_player, direction.x, direction.z)
-
+	# todo: calculate highest block y and cache, so we can check in case there
+	# is +3
 	var next_y_plus2 := _grid_map.get_cell_item(next_coord + Vector3i(0, 2, 0))
-
 	var walkables: Array[Vector3i] = [next_coord + Vector3i(0, 1, 0), next_coord + Vector3i(0, 0, 0), next_coord + Vector3i(0, -1, 0)]
 
 	if next_y_plus2 == GridMap.INVALID_CELL_ITEM:
@@ -66,13 +65,16 @@ func _move_in_direction(actor: Actor, direction: Vector3) -> void:
 			var desired_pos := _grid_map.map_to_local(walkables[ok_i])
 			tw.tween_property(actor, "position", desired_pos, 0.2)
 			await tw.finished
+			# todo: y coodrdinate changes here resulting in jump
 			actor.coordinate = walkables[ok_i]
+			return true
+	return false
 
 
 func _do_npc_logic() -> void:
 	for npc_key: int in _npcs:
 		var npc := _npcs[npc_key]
-		await _move_in_direction(npc, npc.position - _player.position)
+		await _try_move_in_direction(npc, npc.position - _player.position)
 
 
 func _get_cursor_world_position() -> Vector3:
