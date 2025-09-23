@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://d1t48fst4j8t5"]
+[gd_scene load_steps=5 format=3 uid="uid://d1t48fst4j8t5"]
 
-[ext_resource type="Script" uid="uid://oaumavmt3u5t" path="res://actor.gd" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://ba4urehi1a11d" path="res://lib/actor/player.gd" id="1_lx7nv"]
+[ext_resource type="Texture2D" uid="uid://b7vnuxoxfcscl" path="res://resources/movement_arrow.png" id="2_hps26"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_883nb"]
 diffuse_mode = 3
@@ -12,7 +13,7 @@ radius = 0.4
 height = 1.8
 
 [node name="Actor" type="Node3D"]
-script = ExtResource("1_4flbx")
+script = ExtResource("1_lx7nv")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8443577, 0)
@@ -23,3 +24,9 @@ transform = Transform3D(-0.70710677, -0.57060707, 0.41762128, 0, 0.5906057, 0.80
 projection = 1
 current = true
 size = 12.0
+
+[node name="Arrow" type="Decal" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2206546)
+size = Vector3(1, 1, 1)
+texture_albedo = ExtResource("2_hps26")
+albedo_mix = 0.9

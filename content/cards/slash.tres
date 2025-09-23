@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Card" load_steps=4 format=3 uid="uid://ogd6w3xilsd0"]
+
+[ext_resource type="Script" uid="uid://rx7tm062e4w" path="res://lib/cards/card_effect_deal.gd" id="1_7ybqn"]
+[ext_resource type="Script" uid="uid://bvk7isnhf4iqe" path="res://lib/cards/card.gd" id="2_elota"]
+
+[sub_resource type="Resource" id="Resource_bk8nm"]
+script = ExtResource("1_7ybqn")
+damage = 2
+radius_tiles = 1
+range_tiles = 1
+metadata/_custom_type_script = "uid://rx7tm062e4w"
+
+[resource]
+script = ExtResource("2_elota")
+name = "Slash"
+effect = SubResource("Resource_bk8nm")
+metadata/_custom_type_script = "uid://bvk7isnhf4iqe"

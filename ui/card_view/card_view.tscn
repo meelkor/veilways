@@ -1,0 +1,76 @@
+[gd_scene load_steps=6 format=3 uid="uid://ddruyk44jo020"]
+
+[ext_resource type="StyleBox" uid="uid://bhvbuvs213c4c" path="res://ui/card_view/card_view_style.tres" id="1_clnob"]
+[ext_resource type="Script" uid="uid://dmkq0oqkspsix" path="res://ui/card_view/card_view.gd" id="1_eto4x"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_clnob"]
+bg_color = Color(0.75553733, 0.6880944, 0.49389142, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.65863925, 0.48332053, 0.34438246, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+corner_detail = 3
+
+[sub_resource type="LabelSettings" id="LabelSettings_alymm"]
+font_size = 24
+font_color = Color(0.13310519, 0.06651318, 0.018813096, 1)
+shadow_color = Color(1, 1, 1, 0.21176471)
+
+[sub_resource type="LabelSettings" id="LabelSettings_eto4x"]
+line_spacing = 0.0
+font_color = Color(0.13310519, 0.06651318, 0.018813096, 1)
+shadow_color = Color(0.796243, 0.796243, 0.796243, 0.21176471)
+
+[node name="CardView" type="Button"]
+custom_minimum_size = Vector2(260, 320)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -90.0
+offset_top = -220.0
+offset_right = 90.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(130, 320)
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_styles/normal = ExtResource("1_clnob")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_clnob")
+theme_override_styles/hover = ExtResource("1_clnob")
+theme_override_styles/focus = ExtResource("1_clnob")
+script = ExtResource("1_eto4x")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Card name"
+label_settings = SubResource("LabelSettings_alymm")
+
+[node name="DescriptionLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Card description which may be much longer"
+label_settings = SubResource("LabelSettings_eto4x")
+autowrap_mode = 3
