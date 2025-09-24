@@ -53,3 +53,7 @@ class Pointer:
 	var card: Card:
 		get():
 			return deck.hand[hand_index]
+
+
+	func compare(v: Pointer) -> bool:
+		return v.deck == deck and v.hand_index == hand_index

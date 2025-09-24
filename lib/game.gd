@@ -13,8 +13,7 @@ const HandCards = preload("res://ui/hand_cards/hand_cards.gd")
 ## enter/exit.
 static var instance: Game
 
-## All spawned NPCs across all overworlds
-var _npcs: Dictionary[int, Npc] = {}
+signal active_card_changed()
 
 ## Player state including player deck etc. May or may not be actually part of
 ## the tree.
@@ -29,7 +28,15 @@ var _npcs: Dictionary[int, Npc] = {}
 @export var hand_cards: HandCards
 
 ## Card player selected and is currently selecting taget for.
-var active_card: Deck.Pointer
+var active_card: Deck.Pointer:
+	set(v):
+		if active_card and v and active_card.compare(v):
+			v = null
+		active_card = v
+		active_card_changed.emit()
+
+## All spawned NPCs across all overworlds
+var _npcs: Dictionary[int, Npc] = {}
 
 var _player_action_in_progress: bool = false
 
@@ -68,27 +75,20 @@ func is_tile_navigable(tile: Vector3i) -> bool:
 	return false
 
 
-## Toggle given card as active card and start. Pass null to stop playing
-## current card.
-func play_card(pointer: Deck.Pointer) -> void:
-	if not is_free():
-		push_warning("Trying to play card while busy")
-		return
-	if not pointer or active_card and active_card.hand_index == pointer.hand_index:
-		active_card = null
-		hand_cards.selected_cards = []
-		hand_cards.offset_bottom = 0
-	else:
-		active_card = pointer
-		hand_cards.selected_cards = [pointer.hand_index]
-		hand_cards.offset_bottom = 140
-
-
 func _ready() -> void:
 	# todo: hand cards could access deck by itself via Game instance, but I
 	# want to have it reusable? Wrap into "GameUi"? Or move into Player?
 	hand_cards.deck = player.deck
-	hand_cards.card_selected.connect(play_card)
+	active_card_changed.connect(func () -> void:
+		if active_card:
+			hand_cards.selected_cards = [active_card.hand_index]
+			hand_cards.offset_bottom = 140
+		else:
+			hand_cards.selected_cards = []
+			hand_cards.offset_bottom = 0
+	)
+	hand_cards.card_selected.connect(func (pointer: Deck.Pointer) -> void: active_card = pointer)
+
 
 
 func _process(_delta: float) -> void:

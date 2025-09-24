@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://x6l4f8h7ai1f"]
+
+[ext_resource type="Texture2D" uid="uid://eohy4gt1slac" path="res://resources/pixel_pattern.png" id="1_lt4cs"]
+
+[node name="EffectArea" type="Decal"]
+layers = 2
+size = Vector3(1, 22.63003, 1)
+texture_albedo = ExtResource("1_lt4cs")
+modulate = Color(0.7490196, 0.44705883, 0.69411767, 1)
+albedo_mix = 0.69
+cull_mask = 1048573

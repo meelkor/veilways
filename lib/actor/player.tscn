@@ -12,11 +12,12 @@ material = SubResource("StandardMaterial3D_883nb")
 radius = 0.4
 height = 1.8
 
-[node name="Actor" type="Node3D"]
+[node name="Player" type="Node3D"]
 script = ExtResource("1_lx7nv")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8443577, 0)
+layers = 2
 mesh = SubResource("CapsuleMesh_mbk3n")
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -30,3 +31,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2206546)
 size = Vector3(1, 1, 1)
 texture_albedo = ExtResource("2_hps26")
 albedo_mix = 0.9
+
+[node name="RangeDecals" type="Node3D" parent="."]
+
+[node name="EffectDecals" type="Node3D" parent="."]
+top_level = true

@@ -11,9 +11,57 @@ var movement_direction: Vector3:
 ## Direction decal
 @onready var _arrow := $Arrow as Decal
 
+## Container for all decal tiles that highlight range for active card
+@onready var _range_decals := $RangeDecals as Node3D
+
+## Container for all decal tiles that highlight current AoE decals (positioned
+## untder cursor)
+@onready var _effect_decals := $EffectDecals as Node3D
+
+
+func _ready() -> void:
+	super._ready()
+	Game.instance.active_card_changed.connect(_update_range_decals)
+
 
 func _process(_delta: float) -> void:
-	_arrow.visible = Game.instance.is_free()
+	var free := Game.instance.is_free()
+	_arrow.visible = free and not Game.instance.active_card
+	_range_decals.visible = Game.instance.active_card != null and free
+	_effect_decals.visible = Game.instance.active_card != null and free
+
+
+func _update_range_decals() -> void:
+	const CARDINALS: Array[Vector3] = [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]
+	const DIAGONALS: Array[Vector3] = [Vector3.BACK + Vector3.LEFT, Vector3.LEFT + Vector3.FORWARD, Vector3.FORWARD + Vector3.RIGHT, Vector3.RIGHT + Vector3.BACK]
+	for child in _range_decals.get_children():
+		_range_decals.remove_child(child)
+	for child in _effect_decals.get_children():
+		_effect_decals.remove_child(child)
+	var card := Game.instance.active_card.card if Game.instance.active_card else null
+	if card:
+		for i in range(1, card.effect.range_tiles + 1):
+			for vec in CARDINALS:
+				var decal := preload("res://lib/actor/range_area.tscn").instantiate() as Decal
+				decal.position = vec * i
+				_range_decals.add_child(decal)
+			if i % 2 == 0:
+				for vec in DIAGONALS:
+					var decal := preload("res://lib/actor/range_area.tscn").instantiate() as Decal
+					decal.position = vec * i / 2
+					_range_decals.add_child(decal)
+
+		_effect_decals.add_child(preload("res://lib/actor/effect_area.tscn").instantiate() as Decal)
+		for i in range(1, card.effect.radius_tiles):
+			for vec in CARDINALS:
+				var decal := preload("res://lib/actor/effect_area.tscn").instantiate() as Decal
+				decal.position = vec * i
+				_effect_decals.add_child(decal)
+			if i % 2 == 0:
+				for vec in DIAGONALS:
+					var decal := preload("res://lib/actor/effect_area.tscn").instantiate() as Decal
+					decal.position = vec * i / 2
+					_effect_decals.add_child(decal)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -40,6 +88,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			_last_direction = Vector3(-1, 0, 0)
 			_arrow.rotation_degrees.y = 90
 		_arrow.position = _last_direction
+
+		if Game.instance.active_card:
+			var cursor_coord := _get_cursor_coordinate()
+			_effect_decals.position = Vector3(cursor_coord) + Vector3(0.5, 0, 0.5)
+			var distance := absi(coordinate.x - cursor_coord.x) + absi(coordinate.z - cursor_coord.z)
+			var decal_cl := Color.GREEN if distance <= Game.instance.active_card.card.effect.range_tiles and distance > 0 else Color.RED
+			for decal: Decal in _effect_decals.get_children():
+				decal.modulate = decal_cl
 
 
 func _get_cursor_world_position() -> Vector3:

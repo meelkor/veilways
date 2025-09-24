@@ -38,3 +38,4 @@ theme/custom_font="uid://dj4x3yj2p8a7d"
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/decals/filter=2
