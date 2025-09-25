@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://md4bsr6o7mmf"]
+
+[ext_resource type="Script" uid="uid://oaumavmt3u5t" path="res://lib/actor/actor.gd" id="1_c5mqb"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_bjtid"]
+size = Vector3(0.5, 0.4, 0.8)
+
+[sub_resource type="PrismMesh" id="PrismMesh_c5mqb"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[node name="Critter" type="Node3D"]
+script = ExtResource("1_c5mqb")
+metadata/_custom_type_script = "uid://oaumavmt3u5t"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("PrismMesh_bjtid")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.99481344, -0.10171617, 0, 0.10171617, -0.99481344, 0, 0.3466084, 0.42536044)
+mesh = SubResource("PrismMesh_c5mqb")

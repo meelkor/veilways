@@ -1,3 +1,4 @@
+@tool
 class_name Player
 extends Actor
 
@@ -21,14 +22,16 @@ var movement_direction: Vector3:
 
 func _ready() -> void:
 	super._ready()
-	Game.instance.active_card_changed.connect(_update_range_decals)
+	if not Engine.is_editor_hint():
+		Game.instance.active_card_changed.connect(_update_range_decals)
 
 
 func _process(_delta: float) -> void:
-	var free := Game.instance.is_free()
-	_arrow.visible = free and not Game.instance.active_card
-	_range_decals.visible = Game.instance.active_card != null and free
-	_effect_decals.visible = Game.instance.active_card != null and free
+	if not Engine.is_editor_hint():
+		var free := Game.instance.is_free()
+		_arrow.visible = free and not Game.instance.active_card
+		_range_decals.visible = Game.instance.active_card != null and free
+		_effect_decals.visible = Game.instance.active_card != null and free
 
 
 func _update_range_decals() -> void:
