@@ -47,7 +47,6 @@ func _process(_delta: float) -> void:
 		position.x = floorf(position.x) + 0.5
 		position.z = floorf(position.z) + 0.5
 		if position != _editor_last_snap:
-			print("SNAP")
 			snap_y()
 			_editor_last_snap = position
 
