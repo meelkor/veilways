@@ -42,6 +42,8 @@ var _player_action_in_progress: bool = false
 
 var _npc_action_in_progress: bool = false
 
+var _height_cache: Dictionary[int, int]
+
 
 ## Get NPC on given tile or null
 func get_tile_npc(tile: Vector3i) -> Npc:
@@ -73,6 +75,19 @@ func is_tile_navigable(tile: Vector3i) -> bool:
 		var item_name := overworld.grid_map.mesh_library.get_item_name(cell_item)
 		return not item_name.begins_with("wall_")
 	return false
+
+
+## Get max y coordinate on given tile's x,z coords
+func get_tile_height(tile: Vector3i) -> int:
+	var key := Utils.get_tile_key(tile)
+	if not _height_cache.has(key):
+		var cells := overworld.grid_map.get_used_cells()
+		var max_y := -1000
+		for cell in cells:
+			if cell.x == tile.x and cell.z == tile.z:
+				max_y = maxi(cell.y, max_y)
+		_height_cache[key] = max_y if max_y > -1000 else 0
+	return _height_cache[key]
 
 
 func _ready() -> void:
@@ -136,7 +151,7 @@ func _try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
 func _do_npc_logic() -> void:
 	for npc_key: int in _npcs:
 		var npc := _npcs[npc_key]
-		await _try_move_in_direction(npc, npc.position - player.position)
+		await _try_move_in_direction(npc, player.position - npc.position)
 
 
 func _enter_tree() -> void:

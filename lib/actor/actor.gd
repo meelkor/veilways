@@ -29,12 +29,13 @@ func get_coordinate_in_direction(x_direction: float, z_direction: float) -> Vect
 
 
 func snap_y() -> void:
-	const RAY_RANGE = 64.0
-	var from := Vector3(position.x, RAY_RANGE, position.z)
-	var to := Vector3(position.x, -RAY_RANGE, position.z)
-	var ray_params := PhysicsRayQueryParameters3D.create(from, to)
-	var ray_result := get_world_3d().direct_space_state.intersect_ray(ray_params)
-	position.y = ray_result.get("position", Vector3.ZERO).y
+	var game: Game = Utils.editor_find_game(self) if Engine.is_editor_hint() else Game.instance
+	var cells := game.overworld.grid_map.get_used_cells()
+	var max_y := -1000
+	for cell in cells:
+		if cell.x == coordinate.x and cell.z == coordinate.z:
+			max_y = maxi(cell.y, max_y)
+	position.y = (max_y if max_y > -1000 else 0) * 0.2 + 0.2
 
 
 func _ready() -> void:
