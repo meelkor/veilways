@@ -9,12 +9,13 @@ extends Node3D
 @export var max_hp: int:
 	get = _get_max_hp
 
-@export var coordinate: Vector3i = Vector3i.ZERO:
-	set(v):
-		position.x = float(v.x) + 0.5
-		position.y = float(v.y) * 0.2
-		position.z = float(v.z) + 0.5
-		coordinate = v
+var coordinate: Vector3i = Vector3i.ZERO:
+	get():
+		return Vector3i(
+			floori(position.x),
+			0,
+			floori(position.z),
+		)
 
 var _editor_last_snap: Vector3 = Vector3.INF
 

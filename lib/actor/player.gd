@@ -26,7 +26,8 @@ func _ready() -> void:
 		Game.instance.active_card_changed.connect(_update_range_decals)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	super._process(delta)
 	if not Engine.is_editor_hint():
 		var free := Game.instance.is_free()
 		_arrow.visible = free and not Game.instance.active_card

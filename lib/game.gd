@@ -88,6 +88,8 @@ func _ready() -> void:
 			hand_cards.offset_bottom = 0
 	)
 	hand_cards.card_selected.connect(func (pointer: Deck.Pointer) -> void: active_card = pointer)
+	for npc: Npc in find_children("", "Npc"):
+		_npcs[Utils.get_tile_key(npc.position)] = npc
 
 
 
@@ -113,7 +115,8 @@ func _do_player_action(action: PlayerAction, _card: Card = null) -> void:
 ##
 ## todo: maybe move parts of this code into Overworld class
 func _try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
-	var next_coord := player.get_coordinate_in_direction(direction.x, direction.z)
+	var next_coord := actor.get_coordinate_in_direction(direction.x, direction.z)
+	prints(actor.position,actor.coordinate, next_coord)
 	# todo: calculate highest block y and cache, so we can check in case there
 	# is +3, also better access to grid_map
 	var next_y_plus2 := overworld.grid_map.get_cell_item(next_coord + Vector3i(0, 2, 0))
@@ -126,8 +129,6 @@ func _try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
 			var desired_pos := overworld.grid_map.map_to_local(walkables[ok_i])
 			tw.tween_property(actor, "position", desired_pos, 0.2)
 			await tw.finished
-			# todo: y coodrdinate changes here resulting in jump
-			actor.coordinate = walkables[ok_i]
 			return true
 	return false
 

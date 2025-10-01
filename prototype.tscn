@@ -29,7 +29,7 @@ hand_cards = NodePath("HandCards")
 metadata/_custom_type_script = "uid://o4hghbxwqbn2"
 
 [node name="Player" parent="." instance=ExtResource("2_883nb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 1.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -0.5)
 deck = SubResource("Resource_8y2k3")
 
 [node name="Critter" parent="." instance=ExtResource("2_bk8nm")]
