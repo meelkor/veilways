@@ -33,7 +33,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -0.5)
 deck = SubResource("Resource_8y2k3")
 
 [node name="Critter" parent="." instance=ExtResource("2_bk8nm")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.5, 0.4, -0.5)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.5, 1, -0.5)
 
 [node name="Overworld" type="Node3D" parent="." node_paths=PackedStringArray("grid_map")]
 script = ExtResource("1_883nb")

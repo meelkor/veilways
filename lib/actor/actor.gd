@@ -29,13 +29,21 @@ func get_coordinate_in_direction(x_direction: float, z_direction: float) -> Vect
 
 
 func snap_y() -> void:
-	var game: Game = Utils.editor_find_game(self) if Engine.is_editor_hint() else Game.instance
-	var cells := game.overworld.grid_map.get_used_cells()
-	var max_y := -1000
-	for cell in cells:
-		if cell.x == coordinate.x and cell.z == coordinate.z:
-			max_y = maxi(cell.y, max_y)
-	position.y = (max_y if max_y > -1000 else 0) * 0.2 + 0.2
+	const DEF_Y := -1000
+	var game: Game = get_tree().edited_scene_root if Engine.is_editor_hint() else Game.instance
+	if game and game is Game:
+		var map := game.overworld.grid_map
+		var cells := map.get_used_cells()
+		var max_y := DEF_Y
+		for cell in cells:
+			if cell.x == coordinate.x and cell.z == coordinate.z:
+				max_y = maxi(cell.y, max_y)
+		if max_y > DEF_Y:
+			var cell_item := map.get_cell_item(Vector3i(coordinate.x, max_y, coordinate.z))
+			var mesh := map.mesh_library.get_item_mesh(cell_item)
+			position.y = max_y * 0.2 + mesh.get_aabb().size.y
+		else:
+			position.y = 0
 
 
 func _ready() -> void:

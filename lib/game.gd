@@ -91,6 +91,8 @@ func get_tile_height(tile: Vector3i) -> int:
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	# todo: hand cards could access deck by itself via Game instance, but I
 	# want to have it reusable? Wrap into "GameUi"? Or move into Player?
 	hand_cards.deck = player.deck
@@ -109,6 +111,8 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
 	if is_free() and player.movement_direction:
 		_do_player_action(PlayerAction.MOVE)
 
@@ -131,7 +135,6 @@ func _do_player_action(action: PlayerAction, _card: Card = null) -> void:
 ## todo: maybe move parts of this code into Overworld class
 func _try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
 	var next_coord := actor.get_coordinate_in_direction(direction.x, direction.z)
-	prints(actor.position,actor.coordinate, next_coord)
 	# todo: calculate highest block y and cache, so we can check in case there
 	# is +3, also better access to grid_map
 	var next_y_plus2 := overworld.grid_map.get_cell_item(next_coord + Vector3i(0, 2, 0))
