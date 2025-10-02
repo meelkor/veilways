@@ -17,15 +17,18 @@ var coordinate: Vector3i = Vector3i.ZERO:
 			floori(position.z),
 		)
 
+var tile_key: int:
+	get():
+		return Utils.get_tile_key(coordinate)
+
 var _editor_last_snap: Vector3 = Vector3.INF
 
 
 func get_coordinate_in_direction(x_direction: float, z_direction: float) -> Vector3i:
-	return Vector3i(
-		coordinate.x + int(signf(x_direction)),
-		coordinate.y,
-		coordinate.z + int(signf(z_direction)),
-	)
+	var addition := Vector3i(int(signf(x_direction)), 0, 0)\
+		if absf(x_direction) > absf(z_direction)\
+		else Vector3i(0, 0, int(signf(z_direction)))
+	return coordinate + addition
 
 
 func snap_y() -> void:

@@ -70,8 +70,7 @@ func is_free() -> bool:
 func is_tile_navigable(tile: Vector3i) -> bool:
 	var cell_item := overworld.grid_map.get_cell_item(tile)
 	var key := Utils.get_tile_key(tile)
-	var player_key := Utils.get_tile_key(player.coordinate)
-	if not _npcs[key] and player_key != key and cell_item != GridMap.INVALID_CELL_ITEM:
+	if not _npcs.has(key) and player.tile_key != key and cell_item != GridMap.INVALID_CELL_ITEM:
 		var item_name := overworld.grid_map.mesh_library.get_item_name(cell_item)
 		return not item_name.begins_with("wall_")
 	return false
@@ -137,24 +136,28 @@ func _try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
 	var next_coord := actor.get_coordinate_in_direction(direction.x, direction.z)
 	# todo: calculate highest block y and cache, so we can check in case there
 	# is +3, also better access to grid_map
-	var next_y_plus2 := overworld.grid_map.get_cell_item(next_coord + Vector3i(0, 2, 0))
-	var walkables: Array[Vector3i] = [next_coord + Vector3i(0, 1, 0), next_coord + Vector3i(0, 0, 0), next_coord + Vector3i(0, -1, 0)]
+	var current_y := get_tile_height(actor.coordinate)
+	var next_y := get_tile_height(next_coord)
 
-	if next_y_plus2 == GridMap.INVALID_CELL_ITEM:
-		var ok_i := walkables.find_custom(func (v: Vector3i) -> bool: return overworld.grid_map.get_cell_item(v) != GridMap.INVALID_CELL_ITEM)
-		if ok_i != -1:
-			var tw := create_tween()
-			var desired_pos := overworld.grid_map.map_to_local(walkables[ok_i])
-			tw.tween_property(actor, "position", desired_pos, 0.2)
-			await tw.finished
-			return true
+	if absi(current_y - next_y) < 2:
+		var final_coord := next_coord + Vector3i.UP * next_y
+		if not is_tile_navigable(final_coord):
+			return false
+		var tw := create_tween()
+		var desired_pos := overworld.grid_map.map_to_local(final_coord)
+		tw.tween_property(actor, "position", desired_pos, 0.2)
+		await tw.finished
+		return true
 	return false
 
 
 func _do_npc_logic() -> void:
 	for npc_key: int in _npcs:
 		var npc := _npcs[npc_key]
-		await _try_move_in_direction(npc, player.position - npc.position)
+		if npc.visible:
+			await _try_move_in_direction(npc, player.position - npc.position)
+			_npcs.erase(npc_key)
+			_npcs[npc.tile_key] = npc
 
 
 func _enter_tree() -> void:
