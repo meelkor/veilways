@@ -28,7 +28,9 @@ func get_coordinate_in_direction(x_direction: float, z_direction: float) -> Vect
 	var addition := Vector3i(int(signf(x_direction)), 0, 0)\
 		if absf(x_direction) > absf(z_direction)\
 		else Vector3i(0, 0, int(signf(z_direction)))
-	return coordinate + addition
+	var out := coordinate + addition
+	out.y = Game.instance.get_tile_height(out)
+	return out
 
 
 func snap_y() -> void:

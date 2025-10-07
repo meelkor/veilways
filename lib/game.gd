@@ -15,6 +15,9 @@ static var instance: Game
 
 signal active_card_changed()
 
+## Emitted whenever player's turn ends or starts
+signal progressed()
+
 ## Player state including player deck etc. May or may not be actually part of
 ## the tree.
 @export var player: Player
@@ -38,9 +41,15 @@ var active_card: Deck.Pointer:
 ## All spawned NPCs across all overworlds
 var _npcs: Dictionary[int, Npc] = {}
 
-var _player_action_in_progress: bool = false
+var _player_action_in_progress: bool = false:
+	set(v):
+		_player_action_in_progress = v
+		progressed.emit()
 
-var _npc_action_in_progress: bool = false
+var _npc_action_in_progress: bool = false:
+	set(v):
+		_npc_action_in_progress = v
+		progressed.emit()
 
 var _height_cache: Dictionary[int, int]
 
@@ -112,7 +121,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
-	if is_free() and player.movement_direction:
+	if is_free() and player.movement_direction != Vector3.ZERO:
 		_do_player_action(PlayerAction.MOVE)
 
 
@@ -120,8 +129,11 @@ func _do_player_action(action: PlayerAction, _card: Card = null) -> void:
 	_player_action_in_progress = true
 	if action == PlayerAction.MOVE:
 		# todo: I don't like that we need to read it again here...
-		# ActionMovement enum class after all?
-		await _try_move_in_direction(player, player.movement_direction)
+		# ActionMovement enum class after all? Also the condition isn't nice,
+		# check should happen before _do_player_action is called ig
+		if not await _try_move_in_direction(player, player.movement_direction):
+			_player_action_in_progress = false
+			return # turn didn't happen
 	_player_action_in_progress = false
 	# elif use card and assert card do card effect
 	_npc_action_in_progress = true
@@ -134,17 +146,13 @@ func _do_player_action(action: PlayerAction, _card: Card = null) -> void:
 ## todo: maybe move parts of this code into Overworld class
 func _try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
 	var next_coord := actor.get_coordinate_in_direction(direction.x, direction.z)
-	# todo: calculate highest block y and cache, so we can check in case there
-	# is +3, also better access to grid_map
 	var current_y := get_tile_height(actor.coordinate)
-	var next_y := get_tile_height(next_coord)
 
-	if absi(current_y - next_y) < 2:
-		var final_coord := next_coord + Vector3i.UP * next_y
-		if not is_tile_navigable(final_coord):
+	if absi(current_y - next_coord.y) < 2:
+		if not is_tile_navigable(next_coord):
 			return false
 		var tw := create_tween()
-		var desired_pos := overworld.grid_map.map_to_local(final_coord)
+		var desired_pos := overworld.grid_map.map_to_local(next_coord)
 		tw.tween_property(actor, "position", desired_pos, 0.2)
 		await tw.finished
 		return true
