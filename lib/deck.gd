@@ -42,6 +42,7 @@ func get_pointer(index: int) -> Pointer:
 	return pointer
 
 
+
 ## Structure pointing to single card in this deck.
 class Pointer:
 	extends RefCounted
@@ -50,10 +51,22 @@ class Pointer:
 
 	var hand_index: int
 
+	var invalid := false
+
 	var card: Card:
 		get():
+			assert(not invalid, "Trying to access card of invalidated pointer")
 			return deck.hand[hand_index]
 
 
 	func compare(v: Pointer) -> bool:
 		return v.deck == deck and v.hand_index == hand_index
+
+
+	## Move card from hand into discard pile. Doesn't trigger discard action. Marks
+	## pointer as invalid so it cannot be used to acces the card anymore.
+	func move_to_discard_pile() -> void:
+		var discarded_card := card
+		invalid = true
+		deck.hand.remove_at(hand_index)
+		deck.discard_pile.append(discarded_card)

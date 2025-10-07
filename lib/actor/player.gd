@@ -6,6 +6,7 @@ var _last_direction: Vector3
 
 var _mouse_down: bool = false
 
+## Direction in which the player actively wants to go
 var movement_direction: Vector3:
 	get: return _last_direction if _mouse_down else Vector3.ZERO
 
@@ -24,15 +25,28 @@ func _ready() -> void:
 	super._ready()
 	if not Engine.is_editor_hint():
 		Game.instance.active_card_changed.connect(_update_range_decals)
+		Game.instance.progressed.connect(_update_arrow_decal)
 
 
 func _process(delta: float) -> void:
 	super._process(delta)
 	if not Engine.is_editor_hint():
-		var free := Game.instance.is_free()
-		_arrow.visible = free and not Game.instance.active_card
-		_range_decals.visible = Game.instance.active_card != null and free
-		_effect_decals.visible = Game.instance.active_card != null and free
+		var game := Game.instance
+		var free := game.is_free()
+		_range_decals.visible = game.active_card != null and free
+		_effect_decals.visible = game.active_card != null and free
+
+		if free and movement_direction != Vector3.ZERO:
+			game.do_player_action(PlayerAction.Move.new(movement_direction))
+
+
+func _update_arrow_decal() -> void:
+	var game := Game.instance
+	var free := game.is_free()
+	var next := get_coordinate_in_direction(_last_direction.x, _last_direction.z)
+	_arrow.rotation_degrees.y = -90 * _last_direction.x + 180 * maxf(_last_direction.z, 0)
+	_arrow.visible = game.is_tile_navigable(next) and not game.active_card and free
+	_arrow.position = _last_direction
 
 
 func _update_range_decals() -> void:
@@ -71,8 +85,20 @@ func _update_range_decals() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	var btn := event as InputEventMouseButton
 	var motion := event as InputEventMouseMotion
+	var game := Game.instance
 	if btn and btn.button_index == MOUSE_BUTTON_LEFT:
-		_mouse_down = btn.pressed
+		if game.is_free():
+			if game.active_card:
+				_mouse_down = false
+				var target_tile := _get_cursor_coordinate()
+				if can_cast_card_to(game.active_card.card, target_tile):
+					var pointer := game.active_card
+					game.active_card = null
+					game.do_player_action(PlayerAction.UseCard.new(pointer, target_tile))
+			else:
+				_mouse_down = btn.pressed
+		else:
+			_mouse_down = false
 	if motion:
 		var mosue_pos := get_window().get_mouse_position()
 		var win_size := get_viewport().get_visible_rect().size
@@ -81,23 +107,20 @@ func _unhandled_input(event: InputEvent) -> void:
 
 		if x < 0 and z < 0:
 			_last_direction = Vector3(0, 0, 1)
-			_arrow.rotation_degrees.y = 180
 		elif x > 0 and z > 0:
 			_last_direction = Vector3(0, 0, -1)
-			_arrow.rotation_degrees.y = 0
 		elif x < 0 and z > 0:
 			_last_direction = Vector3(1, 0, 0)
-			_arrow.rotation_degrees.y = -90
 		elif x > 0 and z < 0:
 			_last_direction = Vector3(-1, 0, 0)
-			_arrow.rotation_degrees.y = 90
-		_arrow.position = _last_direction
 
-		if Game.instance.active_card:
+		_update_arrow_decal()
+
+		if game.active_card:
 			var cursor_coord := _get_cursor_coordinate()
 			_effect_decals.position = Vector3(cursor_coord) + Vector3(0.5, 0, 0.5)
 			var distance := absi(coordinate.x - cursor_coord.x) + absi(coordinate.z - cursor_coord.z)
-			var decal_cl := Color.GREEN if distance <= Game.instance.active_card.card.effect.range_tiles and distance > 0 else Color.RED
+			var decal_cl := Color.GREEN if distance <= game.active_card.card.effect.range_tiles and distance > 0 else Color.RED
 			for decal: Decal in _effect_decals.get_children():
 				decal.modulate = decal_cl
 

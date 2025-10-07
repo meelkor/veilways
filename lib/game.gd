@@ -15,6 +15,9 @@ static var instance: Game
 
 signal active_card_changed()
 
+## Emitted whenever player's turn ends or starts
+signal progressed()
+
 ## Player state including player deck etc. May or may not be actually part of
 ## the tree.
 @export var player: Player
@@ -38,11 +41,27 @@ var active_card: Deck.Pointer:
 ## All spawned NPCs across all overworlds
 var _npcs: Dictionary[int, Npc] = {}
 
-var _player_action_in_progress: bool = false
+var _player_action_in_progress: bool = false:
+	set(v):
+		_player_action_in_progress = v
+		progressed.emit()
 
-var _npc_action_in_progress: bool = false
+var _npc_action_in_progress: bool = false:
+	set(v):
+		_npc_action_in_progress = v
+		progressed.emit()
 
 var _height_cache: Dictionary[int, int]
+
+
+func get_target_actors(tile: Vector3i, range_tiles: int) -> Array[Actor]:
+	var out: Array[Actor]
+	for actor: Actor in _npcs.values():
+		if actor.distance_to_tile(tile) <= range_tiles:
+			out.append(actor)
+	if player.distance_to_tile(tile) <= range_tiles:
+		out.append(player)
+	return out
 
 
 ## Get NPC on given tile or null
@@ -50,15 +69,29 @@ func get_tile_npc(tile: Vector3i) -> Npc:
 	return _npcs[Utils.get_tile_key(tile)]
 
 
-func deal_damage(actor: Actor, amount: int, _color: Enums.EffectColor) -> void:
-	actor.hp = maxi(0, actor.hp - amount)
-	if actor.hp == 0:
-		var npc := actor as Npc
-		if npc:
-			_npcs.erase(Utils.get_tile_key(npc.coordinate))
-			npc.queue_free()
-		else:
-			get_tree().quit()
+## Get Actor on given tile or null
+func get_tile_actor(tile: Vector3i) -> Actor:
+	if player.coordinate == tile:
+		return player
+	else:
+		return _npcs.get(Utils.get_tile_key(tile), null)
+
+
+func deal_damage(_source_actor: Actor, target_actor: Actor, amount: int) -> void:
+	target_actor.hp = maxi(0, target_actor.hp - amount)
+	if target_actor.hp == 0:
+		kill(target_actor)
+
+
+func kill(actor: Actor) -> void:
+	actor.dead = true
+	var npc := actor as Npc
+	if npc:
+		_npcs.erase(Utils.get_tile_key(npc.coordinate))
+		npc.queue_free()
+	else:
+		get_tree().quit()
+
 
 
 ## Return true if neither player or NPCs is currently moving
@@ -76,6 +109,26 @@ func is_tile_navigable(tile: Vector3i) -> bool:
 	return false
 
 
+## Bread and butter of the game loop, since all actions in the world are
+## triggered by player's action.
+func do_player_action(action: PlayerAction, _card: Card = null) -> void:
+	assert(is_free(), "Trying to do player action when not free")
+	_player_action_in_progress = true
+
+	@warning_ignore("redundant_await")
+	var done_anything := await action.do_action(player)
+
+	if not done_anything:
+		_player_action_in_progress = false
+		return # turn didn't happen
+
+	_player_action_in_progress = false
+	# elif use card and assert card do card effect
+	_npc_action_in_progress = true
+	await _do_npc_logic()
+	_npc_action_in_progress = false
+
+
 ## Get max y coordinate on given tile's x,z coords
 func get_tile_height(tile: Vector3i) -> int:
 	var key := Utils.get_tile_key(tile)
@@ -87,6 +140,24 @@ func get_tile_height(tile: Vector3i) -> int:
 				max_y = maxi(cell.y, max_y)
 		_height_cache[key] = max_y if max_y > -1000 else 0
 	return _height_cache[key]
+
+
+## Returns whether the actor actually moved in given direction
+##
+## todo: maybe move parts of this code into Overworld class
+func try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
+	var next_coord := actor.get_coordinate_in_direction(direction.x, direction.z)
+	var current_y := get_tile_height(actor.coordinate)
+
+	if absi(current_y - next_coord.y) < 2:
+		if not is_tile_navigable(next_coord):
+			return false
+		var tw := create_tween()
+		var desired_pos := overworld.grid_map.map_to_local(next_coord)
+		tw.tween_property(actor, "position", desired_pos, 0.2)
+		await tw.finished
+		return true
+	return false
 
 
 func _ready() -> void:
@@ -112,64 +183,21 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
-	if is_free() and player.movement_direction:
-		_do_player_action(PlayerAction.MOVE)
-
-
-func _do_player_action(action: PlayerAction, _card: Card = null) -> void:
-	_player_action_in_progress = true
-	if action == PlayerAction.MOVE:
-		# todo: I don't like that we need to read it again here...
-		# ActionMovement enum class after all?
-		await _try_move_in_direction(player, player.movement_direction)
-	_player_action_in_progress = false
-	# elif use card and assert card do card effect
-	_npc_action_in_progress = true
-	await _do_npc_logic()
-	_npc_action_in_progress = false
-
-
-## Returns whether the actor actually moved in given direction
-##
-## todo: maybe move parts of this code into Overworld class
-func _try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
-	var next_coord := actor.get_coordinate_in_direction(direction.x, direction.z)
-	# todo: calculate highest block y and cache, so we can check in case there
-	# is +3, also better access to grid_map
-	var current_y := get_tile_height(actor.coordinate)
-	var next_y := get_tile_height(next_coord)
-
-	if absi(current_y - next_y) < 2:
-		var final_coord := next_coord + Vector3i.UP * next_y
-		if not is_tile_navigable(final_coord):
-			return false
-		var tw := create_tween()
-		var desired_pos := overworld.grid_map.map_to_local(final_coord)
-		tw.tween_property(actor, "position", desired_pos, 0.2)
-		await tw.finished
-		return true
-	return false
 
 
 func _do_npc_logic() -> void:
 	for npc_key: int in _npcs:
 		var npc := _npcs[npc_key]
 		if npc.visible:
-			await _try_move_in_direction(npc, player.position - npc.position)
+			await try_move_in_direction(npc, player.position - npc.position)
 			_npcs.erase(npc_key)
 			_npcs[npc.tile_key] = npc
 
 
 func _enter_tree() -> void:
-	assert(not instance, "There may be only one World")
+	assert(not instance, "There may be only one Game")
 	instance = self
 
 
 func _exit_tree() -> void:
 	instance = null
-
-
-enum PlayerAction {
-	MOVE,
-	USE_CARD,
-}

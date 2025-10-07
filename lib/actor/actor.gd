@@ -4,10 +4,12 @@ extends Node3D
 
 @export var deck: Deck
 
-@export var hp: int
-
 @export var max_hp: int:
 	get = _get_max_hp
+
+@export var hp: int
+
+@export var dead: bool
 
 var coordinate: Vector3i = Vector3i.ZERO:
 	get():
@@ -24,11 +26,22 @@ var tile_key: int:
 var _editor_last_snap: Vector3 = Vector3.INF
 
 
+func can_cast_card_to(card: Card, target_tile: Vector3i) -> bool:
+	var distance_tiles := distance_to_tile(target_tile)
+	return card.effect.range_tiles >= distance_tiles and card.effect.is_valid(self, target_tile)
+
+
+func distance_to_tile(pos: Vector3i) -> int:
+	return absi(pos.x - coordinate.x) + absi(pos.z - coordinate.z)
+
+
 func get_coordinate_in_direction(x_direction: float, z_direction: float) -> Vector3i:
 	var addition := Vector3i(int(signf(x_direction)), 0, 0)\
 		if absf(x_direction) > absf(z_direction)\
 		else Vector3i(0, 0, int(signf(z_direction)))
-	return coordinate + addition
+	var out := coordinate + addition
+	out.y = Game.instance.get_tile_height(out)
+	return out
 
 
 func snap_y() -> void:
@@ -49,10 +62,19 @@ func snap_y() -> void:
 			position.y = 0
 
 
+func cast_card(card_pointer: Deck.Pointer, target_tile: Vector3i) -> void:
+	@warning_ignore("redundant_await")
+	await card_pointer.card.effect.execute(self, target_tile)
+	assert(card_pointer.deck == deck, "Actor %s is casting card from foreign deck")
+	card_pointer.move_to_discard_pile()
+
+
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		if deck:
 			deck.fill_hand()
+		if hp == 0 and not dead:
+			hp = max_hp
 
 
 func _process(_delta: float) -> void:

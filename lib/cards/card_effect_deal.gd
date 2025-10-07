@@ -7,13 +7,14 @@ extends CardEffect
 
 @export var requires_actor_target: bool
 
-@export var cards: Array[Card]
+@export var conditions: Array[Condition]
 
 
-func is_valid(target: Vector3i) -> bool:
-	return Game.instance.is_tile_navigable(target) and Game.instance.get_tile_npc(target) != null
+func is_valid(actor: Actor, target: Vector3i) -> bool:
+	var target_actor := Game.instance.get_tile_actor(target)
+	return !!target_actor and actor != target_actor
 
 
-func execute(target: Vector3i) -> void:
-	var npc := Game.instance.get_tile_npc(target)
-	Game.instance.deal_damage(npc, damage, color)
+func execute(actor: Actor, target: Vector3i) -> void:
+	var target_actor := Game.instance.get_tile_actor(target)
+	Game.instance.deal_damage(actor, target_actor, damage)
