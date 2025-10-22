@@ -8,14 +8,14 @@ size = Vector3(0.5, 0.4, 0.8)
 [sub_resource type="PrismMesh" id="PrismMesh_c5mqb"]
 size = Vector3(0.2, 0.2, 0.2)
 
-[node name="Critter" type="Node3D"]
+[node name="Critter" type="Node3D" unique_id=1171793010]
 script = ExtResource("1_c5mqb")
 metadata/_custom_type_script = "uid://oaumavmt3u5t"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1200511032]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 mesh = SubResource("PrismMesh_bjtid")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=155282299]
 transform = Transform3D(1, 0, 0, 0, -0.99481344, -0.10171617, 0, 0.10171617, -0.99481344, 0, 0.3466084, 0.42536044)
 mesh = SubResource("PrismMesh_c5mqb")

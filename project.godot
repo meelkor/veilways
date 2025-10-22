@@ -35,6 +35,11 @@ window/stretch/aspect="keep_height"
 theme/custom="uid://bt1wtnycqamh0"
 theme/custom_font="uid://dj4x3yj2p8a7d"
 
+[layer_names]
+
+3d_physics/layer_1="World"
+3d_physics/layer_4="Actors"
+
 [rendering]
 
 renderer/rendering_method="mobile"

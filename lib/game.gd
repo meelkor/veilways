@@ -66,7 +66,11 @@ func get_target_actors(tile: Vector3i, range_tiles: int) -> Array[Actor]:
 
 ## Get NPC on given tile or null
 func get_tile_npc(tile: Vector3i) -> Npc:
-	return _npcs[Utils.get_tile_key(tile)]
+	var npc := _npcs.get(Utils.get_tile_key(tile), null) as Npc
+	if npc and npc.visible:
+		return npc
+	else:
+		return null
 
 
 ## Get Actor on given tile or null
@@ -127,6 +131,7 @@ func do_player_action(action: PlayerAction, _card: Card = null) -> void:
 	_npc_action_in_progress = true
 	await _do_npc_logic()
 	_npc_action_in_progress = false
+	_do_start_of_turn_logic()
 
 
 ## Get max y coordinate on given tile's x,z coords
@@ -177,12 +182,23 @@ func _ready() -> void:
 	hand_cards.card_selected.connect(func (pointer: Deck.Pointer) -> void: active_card = pointer)
 	for npc: Npc in find_children("", "Npc"):
 		_npcs[Utils.get_tile_key(npc.position)] = npc
-
+	# wait for active area to detect actors, dunno why two frames are needed
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	_fill_all_active_hands()
 
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
+
+
+## Called after each player's turn (even cooldown one). Expire buffs, temp
+## health etc.
+func _do_start_of_turn_logic() -> void:
+	for actor in player.find_active_actors():
+		actor.temp_hp = maxi(actor.temp_hp - 1, 0)
+	_fill_all_active_hands()
 
 
 func _do_npc_logic() -> void:
@@ -192,6 +208,13 @@ func _do_npc_logic() -> void:
 			await try_move_in_direction(npc, player.position - npc.position)
 			_npcs.erase(npc_key)
 			_npcs[npc.tile_key] = npc
+
+
+## Fill hand for all active actors (player + npcs)
+func _fill_all_active_hands() -> void:
+	for actor in player.find_active_actors():
+		actor.deck.fill_hand()
+
 
 
 func _enter_tree() -> void:

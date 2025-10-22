@@ -11,6 +11,10 @@ extends Node3D
 
 @export var dead: bool
 
+@export var temp_hp: int
+
+@export var _body: StaticBody3D
+
 var coordinate: Vector3i = Vector3i.ZERO:
 	get():
 		return Vector3i(
@@ -71,10 +75,11 @@ func cast_card(card_pointer: Deck.Pointer, target_tile: Vector3i) -> void:
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
-		if deck:
-			deck.fill_hand()
 		if hp == 0 and not dead:
 			hp = max_hp
+		if not deck:
+			# deck is optional, create empty deck if not provided
+			deck = Deck.new()
 
 
 func _process(_delta: float) -> void:
@@ -84,6 +89,24 @@ func _process(_delta: float) -> void:
 		if position != _editor_last_snap:
 			snap_y()
 			_editor_last_snap = position
+
+
+func _enter_tree() -> void:
+	# Create the collision body used to detect actors nearby player. Make into
+	# scene?
+	if not Engine.is_editor_hint() and not _body:
+		_body = StaticBody3D.new()
+		var col_shape := CollisionShape3D.new()
+		var shape := SphereShape3D.new()
+		shape.radius = 0.25
+		col_shape.shape = shape
+		_body.add_child(col_shape)
+		_body.collision_mask = 0
+		_body.collision_layer = 0b1000
+		add_child(_body)
+		_body.owner = self
+		_body.name = "BodyOf%s" % to_string()
+		col_shape.owner = self
 
 
 func _get_max_hp() -> int:

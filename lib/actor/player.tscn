@@ -1,7 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://d1t48fst4j8t5"]
+[gd_scene load_steps=6 format=3 uid="uid://d1t48fst4j8t5"]
 
 [ext_resource type="Script" uid="uid://ba4urehi1a11d" path="res://lib/actor/player.gd" id="1_lx7nv"]
 [ext_resource type="Texture2D" uid="uid://b7vnuxoxfcscl" path="res://resources/movement_arrow.png" id="2_hps26"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hps26"]
+radius = 20.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_883nb"]
 diffuse_mode = 3
@@ -12,27 +15,35 @@ material = SubResource("StandardMaterial3D_883nb")
 radius = 0.4
 height = 1.8
 
-[node name="Player" type="Node3D"]
+[node name="Player" type="Node3D" unique_id=57778643 node_paths=PackedStringArray("_body")]
 script = ExtResource("1_lx7nv")
+_body = NodePath("")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="ActiveArea" type="Area3D" parent="." unique_id=1581905617]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ActiveArea" unique_id=1647447734]
+shape = SubResource("SphereShape3D_hps26")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2095894186]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8443577, 0)
 layers = 2
 mesh = SubResource("CapsuleMesh_mbk3n")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=340286303]
 transform = Transform3D(-0.70710677, -0.57060707, 0.41762128, 0, 0.5906057, 0.8069603, -0.70710677, 0.57060707, -0.41762128, 2.5, 5.4, -2.5)
 projection = 1
 current = true
 size = 12.0
 
-[node name="Arrow" type="Decal" parent="."]
+[node name="Arrow" type="Decal" parent="." unique_id=16440143]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2206546)
 size = Vector3(1, 1, 1)
 texture_albedo = ExtResource("2_hps26")
 albedo_mix = 0.9
 
-[node name="RangeDecals" type="Node3D" parent="."]
+[node name="RangeDecals" type="Node3D" parent="." unique_id=1260695710]
 
-[node name="EffectDecals" type="Node3D" parent="."]
+[node name="EffectDecals" type="Node3D" parent="." unique_id=1008649385]
 top_level = true
