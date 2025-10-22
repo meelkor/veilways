@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bpucn2eh2yu6"]
+[gd_scene load_steps=13 format=3 uid="uid://bpucn2eh2yu6"]
 
 [ext_resource type="Script" uid="uid://c510cuhpkowl8" path="res://lib/overworld/overworld.gd" id="1_883nb"]
 [ext_resource type="Script" uid="uid://o4hghbxwqbn2" path="res://lib/game.gd" id="1_mbk3n"]
@@ -7,12 +7,13 @@
 [ext_resource type="Script" uid="uid://bvk7isnhf4iqe" path="res://lib/cards/card.gd" id="3_mbk3n"]
 [ext_resource type="Script" uid="uid://dmdhu2kxcbu8s" path="res://lib/deck.gd" id="4_1ixuk"]
 [ext_resource type="Resource" uid="uid://ogd6w3xilsd0" path="res://content/cards/slash.tres" id="4_8y2k3"]
+[ext_resource type="Resource" uid="uid://sx1ic2jkylu" path="res://content/cards/cover.tres" id="4_bk8nm"]
 [ext_resource type="MeshLibrary" uid="uid://q0hyd0ir0hg3" path="res://prototype_mesh_library.tres" id="5_8y2k3"]
 [ext_resource type="PackedScene" uid="uid://bc3yndrscy4kr" path="res://ui/hand_cards/hand_cards.tscn" id="7_8y2k3"]
 
 [sub_resource type="Resource" id="Resource_8y2k3"]
 script = ExtResource("4_1ixuk")
-drawing_deck = Array[ExtResource("3_mbk3n")]([ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3")])
+drawing_deck = Array[ExtResource("3_mbk3n")]([ExtResource("4_bk8nm"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_bk8nm"), ExtResource("4_8y2k3")])
 metadata/_custom_type_script = "uid://dmdhu2kxcbu8s"
 
 [sub_resource type="Environment" id="Environment_8y2k3"]

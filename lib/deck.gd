@@ -29,7 +29,7 @@ func fill_hand() -> void:
 
 ## Return discard pile into drawing deck and shuffle
 func shuffle() -> void:
-	hand.append_array(discard_pile)
+	drawing_deck.append_array(discard_pile)
 	discard_pile.resize(0)
 	hand.shuffle()
 	emit_changed()

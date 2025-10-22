@@ -35,7 +35,7 @@ func find_active_actors() -> Array[Actor]:
 func _ready() -> void:
 	super._ready()
 	if not Engine.is_editor_hint():
-		Game.instance.active_card_changed.connect(_update_range_decals)
+		Game.instance.active_card_changed.connect(_prepare_card_decals)
 		Game.instance.progressed.connect(_update_arrow_decal)
 
 
@@ -60,7 +60,7 @@ func _update_arrow_decal() -> void:
 	_arrow.position = _last_direction
 
 
-func _update_range_decals() -> void:
+func _prepare_card_decals() -> void:
 	const CARDINALS: Array[Vector3] = [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]
 	const DIAGONALS: Array[Vector3] = [Vector3.BACK + Vector3.LEFT, Vector3.LEFT + Vector3.FORWARD, Vector3.FORWARD + Vector3.RIGHT, Vector3.RIGHT + Vector3.BACK]
 	for child in _range_decals.get_children():
@@ -69,28 +69,34 @@ func _update_range_decals() -> void:
 		_effect_decals.remove_child(child)
 	var card := Game.instance.active_card.card if Game.instance.active_card else null
 	if card:
-		for i in range(1, card.effect.range_tiles + 1):
-			for vec in CARDINALS:
-				var decal := preload("res://lib/actor/range_area.tscn").instantiate() as Decal
-				decal.position = vec * i
-				_range_decals.add_child(decal)
-			if i % 2 == 0:
-				for vec in DIAGONALS:
+		if card.effect.range_tiles == 0:
+			var decal := preload("res://lib/actor/effect_area.tscn").instantiate() as Decal
+			decal.position = Vector3.ZERO
+			_effect_decals.add_child(decal)
+		else:
+			for i in range(1, card.effect.range_tiles + 1):
+				for vec in CARDINALS:
 					var decal := preload("res://lib/actor/range_area.tscn").instantiate() as Decal
-					decal.position = vec * i / 2
+					decal.position = vec * i
 					_range_decals.add_child(decal)
+				if i % 2 == 0:
+					for vec in DIAGONALS:
+						var decal := preload("res://lib/actor/range_area.tscn").instantiate() as Decal
+						decal.position = vec * i / 2
+						_range_decals.add_child(decal)
 
-		_effect_decals.add_child(preload("res://lib/actor/effect_area.tscn").instantiate() as Decal)
-		for i in range(1, card.effect.radius_tiles):
-			for vec in CARDINALS:
-				var decal := preload("res://lib/actor/effect_area.tscn").instantiate() as Decal
-				decal.position = vec * i
-				_effect_decals.add_child(decal)
-			if i % 2 == 0:
-				for vec in DIAGONALS:
+			_effect_decals.add_child(preload("res://lib/actor/effect_area.tscn").instantiate() as Decal)
+			for i in range(1, card.effect.radius_tiles):
+				for vec in CARDINALS:
 					var decal := preload("res://lib/actor/effect_area.tscn").instantiate() as Decal
-					decal.position = vec * i / 2
+					decal.position = vec * i
 					_effect_decals.add_child(decal)
+				if i % 2 == 0:
+					for vec in DIAGONALS:
+						var decal := preload("res://lib/actor/effect_area.tscn").instantiate() as Decal
+						decal.position = vec * i / 2
+						_effect_decals.add_child(decal)
+		_update_effect_decals()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -102,6 +108,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			if game.active_card:
 				_mouse_down = false
 				var target_tile := _get_cursor_coordinate()
+				if game.active_card.card.is_self():
+					target_tile = coordinate
 				if can_cast_card_to(game.active_card.card, target_tile):
 					var pointer := game.active_card
 					game.active_card = null
@@ -126,14 +134,26 @@ func _unhandled_input(event: InputEvent) -> void:
 			_last_direction = Vector3(-1, 0, 0)
 
 		_update_arrow_decal()
+		_update_effect_decals()
 
-		if game.active_card:
-			var cursor_coord := _get_cursor_coordinate()
-			_effect_decals.position = Vector3(cursor_coord) + Vector3(0.5, 0, 0.5)
-			var distance := absi(coordinate.x - cursor_coord.x) + absi(coordinate.z - cursor_coord.z)
-			var decal_cl := Color.GREEN if distance <= game.active_card.card.effect.range_tiles and distance > 0 else Color.RED
-			for decal: Decal in _effect_decals.get_children():
-				decal.modulate = decal_cl
+
+func _update_effect_decals() -> void:
+	var game := Game.instance
+	if game.active_card:
+		var card := game.active_card.card
+		var range_tiles := card.effect.range_tiles
+		var target_tile := _get_cursor_coordinate()
+		if card.is_self():
+			target_tile = coordinate
+
+		_effect_decals.position = Vector3(target_tile) + Vector3(0.5, 0, 0.5)
+		var distance := absi(coordinate.x - target_tile.x) + absi(coordinate.z - target_tile.z)
+		# todo: maybe range check should be moved into is_valid? or separate
+		# method?
+		var valid := distance <= card.effect.range_tiles and (distance > 0 or card.is_self()) and card.effect.is_valid(self, target_tile)
+		var decal_cl := Color.GREEN if valid else Color.RED
+		for decal: Decal in _effect_decals.get_children():
+			decal.modulate = decal_cl
 
 
 func _get_cursor_world_position() -> Vector3:

@@ -3,12 +3,12 @@ class_name CardEffect
 extends Resource
 
 ## Area of effect. Assumes circular AoE if more than 1.
-@export var radius_tiles: int:
+@export_range(1, 8, 1) var radius_tiles: int:
 	get = _get_radius_tiles
 
 ## Range of the target tile that may be selected as target. 1 = only one tile
 ## in 4 cardinal directions. 2 = two tiles in 4 cardinal directions and 1 tiles
-## in diagonals
+## in diagonals. 0 = self, unless 0 cards cannot target source actor
 @export var range_tiles: int:
 	get = _get_range_tiles
 

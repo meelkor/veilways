@@ -87,6 +87,10 @@ func deal_damage(_source_actor: Actor, target_actor: Actor, amount: int) -> void
 		kill(target_actor)
 
 
+func grant_temp_hp(target_actor: Actor, amount: int) -> void:
+	target_actor.temp_hp += mini(amount, target_actor.max_hp)
+
+
 func kill(actor: Actor) -> void:
 	actor.dead = true
 	var npc := actor as Npc

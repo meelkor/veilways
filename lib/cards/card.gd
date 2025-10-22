@@ -13,3 +13,9 @@ extends Resource
 			return description
 		else:
 			return effect.description
+
+
+## Return true if card can be only target on self and thus target selection
+## doesn't need to happen.
+func is_self() -> bool:
+	return effect.range_tiles == 0
