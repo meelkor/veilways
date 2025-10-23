@@ -34,10 +34,14 @@ func _get_description() -> String:
 
 
 ## Execute the actual effect, updating world as necessary (e.g. dealing damage,
-## killing etc.)
-@abstract func execute(actor: Actor, target: Vector3i) -> void
+## killing etc.). Card needs to be provided since it contains info such as its
+## family.
+@abstract func execute(card: Card, actor: Actor, target: Vector3i) -> void
 
 
 func _get_target_actors(target: Vector3i) -> Array[Actor]:
 	return Game.instance.get_target_actors(target, radius_tiles)
 
+
+func _to_exp(color: Enums.NumberColor, base: int) -> String:
+	return "[[c=%s:%s]]" % [color, base]

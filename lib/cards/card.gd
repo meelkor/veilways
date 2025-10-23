@@ -5,6 +5,8 @@ extends Resource
 
 @export var effect: CardEffect
 
+@export var family: Enums.CardFamily
+
 ## If set to non-empty string, overrides the generated description provided by
 ## the effect.
 @export var description: String:
@@ -19,3 +21,7 @@ extends Resource
 ## doesn't need to happen.
 func is_self() -> bool:
 	return effect.range_tiles == 0
+
+
+func execute(actor: Actor, target: Vector3i) -> void:
+	effect.execute(self, actor, target)

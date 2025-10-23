@@ -81,14 +81,14 @@ func get_tile_actor(tile: Vector3i) -> Actor:
 		return _npcs.get(Utils.get_tile_key(tile), null)
 
 
-func deal_damage(_source_actor: Actor, target_actor: Actor, amount: int) -> void:
-	target_actor.hp = maxi(0, target_actor.hp - amount)
+func deal_damage(_source_actor: Actor, target_actor: Actor, number: EffectNumber) -> void:
+	target_actor.hp = maxi(0, target_actor.hp - number.total)
 	if target_actor.hp == 0:
 		kill(target_actor)
 
 
-func grant_temp_hp(target_actor: Actor, amount: int) -> void:
-	target_actor.temp_hp += mini(amount, target_actor.max_hp)
+func grant_temp_hp(target_actor: Actor, number: EffectNumber) -> void:
+	target_actor.temp_hp += mini(number.total, target_actor.max_hp)
 
 
 func kill(actor: Actor) -> void:

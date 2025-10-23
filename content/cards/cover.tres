@@ -6,6 +6,7 @@
 
 [sub_resource type="Resource" id="Resource_r12qx"]
 script = ExtResource("2_00vxe")
+color = 1
 temp_hp = 2
 metadata/_custom_type_script = "uid://rx7tm062e4w"
 

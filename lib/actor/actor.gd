@@ -68,9 +68,15 @@ func snap_y() -> void:
 
 func cast_card(card_pointer: Deck.Pointer, target_tile: Vector3i) -> void:
 	@warning_ignore("redundant_await")
-	await card_pointer.card.effect.execute(self, target_tile)
+	await card_pointer.card.execute(self, target_tile)
 	assert(card_pointer.deck == deck, "Actor %s is casting card from foreign deck")
 	card_pointer.move_to_discard_pile()
+
+
+## Since numbers on cards may be modified by actor's conditions, equipments
+## etc. it needs to be computed by the actor.
+func resolve_number(family: Enums.CardFamily, color: Enums.NumberColor, base: int) -> EffectNumber:
+	return EffectNumber.new(self, family, color, base)
 
 
 func _ready() -> void:

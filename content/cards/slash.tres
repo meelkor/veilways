@@ -7,6 +7,8 @@
 [sub_resource type="Resource" id="Resource_bk8nm"]
 script = ExtResource("1_7ybqn")
 damage = 2
+color = 1
+requires_actor_target = true
 radius_tiles = 1
 range_tiles = 1
 metadata/_custom_type_script = "uid://rx7tm062e4w"
