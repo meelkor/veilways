@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://d1t48fst4j8t5"]
+[gd_scene load_steps=7 format=3 uid="uid://d1t48fst4j8t5"]
 
 [ext_resource type="Script" uid="uid://ba4urehi1a11d" path="res://lib/actor/player.gd" id="1_lx7nv"]
 [ext_resource type="Texture2D" uid="uid://b7vnuxoxfcscl" path="res://resources/movement_arrow.png" id="2_hps26"]
+[ext_resource type="PackedScene" uid="uid://bothi5fsfftgq" path="res://ui/player_gui/player_gui.tscn" id="3_qv1bj"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_hps26"]
 radius = 20.0
@@ -15,9 +16,8 @@ material = SubResource("StandardMaterial3D_883nb")
 radius = 0.4
 height = 1.8
 
-[node name="Player" type="Node3D" unique_id=57778643 node_paths=PackedStringArray("_body")]
+[node name="Player" type="Node3D" unique_id=57778643]
 script = ExtResource("1_lx7nv")
-_body = NodePath("")
 
 [node name="ActiveArea" type="Area3D" parent="." unique_id=1581905617]
 collision_layer = 0
@@ -47,3 +47,5 @@ albedo_mix = 0.9
 
 [node name="EffectDecals" type="Node3D" parent="." unique_id=1008649385]
 top_level = true
+
+[node name="PlayerGui" parent="." unique_id=1997076290 instance=ExtResource("3_qv1bj")]

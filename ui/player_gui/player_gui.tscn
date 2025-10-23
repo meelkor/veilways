@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://bothi5fsfftgq"]
+
+[ext_resource type="Script" uid="uid://c2y105scdfo0q" path="res://ui/player_gui/player_gui.gd" id="1_r5pa8"]
+[ext_resource type="PackedScene" uid="uid://bc3yndrscy4kr" path="res://ui/hand_cards/hand_cards.tscn" id="2_eg8so"]
+
+[node name="PlayerGui" type="Control" unique_id=1997076290]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_r5pa8")
+
+[node name="HandCards" parent="." unique_id=381947567 instance=ExtResource("2_eg8so")]
+layout_mode = 1

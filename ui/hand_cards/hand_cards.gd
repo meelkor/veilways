@@ -1,3 +1,4 @@
+class_name HandCards
 extends HBoxContainer
 
 const CardView = preload("res://ui/card_view/card_view.gd")

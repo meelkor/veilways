@@ -7,8 +7,6 @@
 class_name Game
 extends Node
 
-const HandCards = preload("res://ui/hand_cards/hand_cards.gd")
-
 ## Currently active game instance for everyone to access. Set/unset on tree
 ## enter/exit.
 static var instance: Game
@@ -26,9 +24,6 @@ signal progressed()
 ##
 ## todo: should be dynamically created and support multiple
 @export var overworld: Overworld
-
-## UI with player's cards. todo: probably should be elsewhere...
-@export var hand_cards: HandCards
 
 ## Card player selected and is currently selecting taget for.
 var active_card: Deck.Pointer:
@@ -172,18 +167,6 @@ func try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-	# todo: hand cards could access deck by itself via Game instance, but I
-	# want to have it reusable? Wrap into "GameUi"? Or move into Player?
-	hand_cards.deck = player.deck
-	active_card_changed.connect(func () -> void:
-		if active_card:
-			hand_cards.selected_cards = [active_card.hand_index]
-			hand_cards.offset_bottom = 140
-		else:
-			hand_cards.selected_cards = []
-			hand_cards.offset_bottom = 0
-	)
-	hand_cards.card_selected.connect(func (pointer: Deck.Pointer) -> void: active_card = pointer)
 	for npc: Npc in find_children("", "Npc"):
 		_npcs[Utils.get_tile_key(npc.position)] = npc
 	# wait for active area to detect actors, dunno why two frames are needed
