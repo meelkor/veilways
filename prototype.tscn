@@ -30,6 +30,8 @@ metadata/_custom_type_script = "uid://o4hghbxwqbn2"
 [node name="Player" parent="." unique_id=128370249 instance=ExtResource("2_883nb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 2.9802323e-09, -0.5)
 deck = SubResource("Resource_8y2k3")
+max_hp = 18
+hp = 18
 
 [node name="Critter" parent="." unique_id=717241545 instance=ExtResource("2_bk8nm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.5, 1, -0.5)

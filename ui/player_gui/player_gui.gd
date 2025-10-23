@@ -1,27 +1,29 @@
 class_name PlayerGui
 extends Control
 
-@onready var hand_cards := %HandCards as HandCards
-@onready var draw_pile_button := %DrawPileButton as Button
-@onready var discard_pile_button := %DiscardPileButton as Button
+@onready var _hand_cards := %HandCards as HandCards
+@onready var _draw_pile_button := %DrawPileButton as Button
+@onready var _discard_pile_button := %DiscardPileButton as Button
+@onready var _hp_bar := %HpBar as HpBar
 
 
 func _ready() -> void:
 	var game := Game.instance
 	var player := game.player
+	_hp_bar.actor = player
 	# todo: hand cards could access deck by itself via Game instance, but I
 	# want to have it reusable? Wrap into "GameUi"? Or move into Player?
-	hand_cards.deck = player.deck
+	_hand_cards.deck = player.deck
 	game.active_card_changed.connect(func () -> void:
 		if game.active_card:
-			hand_cards.selected_cards = [game.active_card.hand_index]
-			hand_cards.offset_bottom = 140
+			_hand_cards.selected_cards = [game.active_card.hand_index]
+			_hand_cards.offset_bottom = 140
 		else:
-			hand_cards.selected_cards = []
-			hand_cards.offset_bottom = 0
+			_hand_cards.selected_cards = []
+			_hand_cards.offset_bottom = 0
 	)
-	hand_cards.card_selected.connect(func (pointer: Deck.Pointer) -> void: game.active_card = pointer)
+	_hand_cards.card_selected.connect(func (pointer: Deck.Pointer) -> void: game.active_card = pointer)
 	player.deck.changed.connect(func () -> void:
-		draw_pile_button.text = "%s cards" % len(player.deck.draw_pile)
-		discard_pile_button.text = "%s cards" % len(player.deck.discard_pile)
+		_draw_pile_button.text = "%s cards" % len(player.deck.draw_pile)
+		_discard_pile_button.text = "%s cards" % len(player.deck.discard_pile)
 	)

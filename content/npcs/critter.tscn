@@ -10,6 +10,8 @@ size = Vector3(0.2, 0.2, 0.2)
 
 [node name="Critter" type="Node3D" unique_id=1171793010]
 script = ExtResource("1_c5mqb")
+max_hp = 8
+hp = 8
 metadata/_custom_type_script = "uid://oaumavmt3u5t"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1200511032]
