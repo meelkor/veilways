@@ -4,7 +4,7 @@ extends Resource
 const HAND_SIZE = 5
 
 ## LIFO (0 = bottom)
-@export var drawing_deck: Array[Card]
+@export var draw_pile: Array[Card]
 
 @export var hand: Array[Card]
 
@@ -17,11 +17,11 @@ const HAND_SIZE = 5
 func fill_hand() -> void:
 	var to_add := HAND_SIZE - hand.size()
 	if to_add > 0:
-		var to_draw := mini(drawing_deck.size(), to_add)
-		var slice_start := drawing_deck.size() - to_draw
-		hand.append_array(drawing_deck.slice(slice_start))
-		drawing_deck.resize(slice_start)
-		if drawing_deck.size() == 0 and discard_pile.size() > 0:
+		var to_draw := mini(draw_pile.size(), to_add)
+		var slice_start := draw_pile.size() - to_draw
+		hand.append_array(draw_pile.slice(slice_start))
+		draw_pile.resize(slice_start)
+		if draw_pile.size() == 0 and discard_pile.size() > 0:
 			shuffle()
 			fill_hand()
 		emit_changed()
@@ -29,7 +29,7 @@ func fill_hand() -> void:
 
 ## Return discard pile into drawing deck and shuffle
 func shuffle() -> void:
-	drawing_deck.append_array(discard_pile)
+	draw_pile.append_array(discard_pile)
 	discard_pile.resize(0)
 	hand.shuffle()
 	emit_changed()

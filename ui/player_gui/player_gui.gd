@@ -1,7 +1,9 @@
 class_name PlayerGui
 extends Control
 
-@onready var hand_cards := $HandCards as HandCards
+@onready var hand_cards := %HandCards as HandCards
+@onready var draw_pile_button := %DrawPileButton as Button
+@onready var discard_pile_button := %DiscardPileButton as Button
 
 
 func _ready() -> void:
@@ -19,3 +21,7 @@ func _ready() -> void:
 			hand_cards.offset_bottom = 0
 	)
 	hand_cards.card_selected.connect(func (pointer: Deck.Pointer) -> void: game.active_card = pointer)
+	player.deck.changed.connect(func () -> void:
+		draw_pile_button.text = "%s cards" % len(player.deck.draw_pile)
+		discard_pile_button.text = "%s cards" % len(player.deck.discard_pile)
+	)

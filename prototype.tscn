@@ -12,7 +12,7 @@
 
 [sub_resource type="Resource" id="Resource_8y2k3"]
 script = ExtResource("4_1ixuk")
-drawing_deck = Array[ExtResource("3_mbk3n")]([ExtResource("4_bk8nm"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_bk8nm"), ExtResource("4_8y2k3")])
+draw_pile = Array[ExtResource("3_mbk3n")]([ExtResource("4_bk8nm"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_bk8nm"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3")])
 metadata/_custom_type_script = "uid://dmdhu2kxcbu8s"
 
 [sub_resource type="Environment" id="Environment_8y2k3"]
