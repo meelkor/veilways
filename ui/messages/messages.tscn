@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://3boosbhlh0yv"]
+
+[ext_resource type="Script" uid="uid://sl7tk4j17owj" path="res://ui/messages/messages.gd" id="1_s4tua"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_il6jf"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.81960785, 0.75686276, 0.5764706, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4359209, 0.26365656, 0.13220188, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="Messages" type="ScrollContainer" unique_id=1348350584]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_il6jf")
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+script = ExtResource("1_s4tua")
+
+[node name="LineContainer" type="VBoxContainer" parent="." unique_id=1130900334]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="LineContainer" unique_id=2128102803]
+layout_mode = 2

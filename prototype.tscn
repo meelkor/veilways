@@ -28,7 +28,7 @@ overworld = NodePath("Overworld")
 metadata/_custom_type_script = "uid://o4hghbxwqbn2"
 
 [node name="Player" parent="." unique_id=128370249 instance=ExtResource("2_883nb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 2.9802323e-09, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0.8, -0.5)
 deck = SubResource("Resource_8y2k3")
 max_hp = 18
 hp = 18

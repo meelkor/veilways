@@ -69,12 +69,12 @@ func _prepare_card_decals() -> void:
 		_effect_decals.remove_child(child)
 	var card := Game.instance.active_card.card if Game.instance.active_card else null
 	if card:
-		if card.effect.range_tiles == 0:
+		if card.range_tiles == 0:
 			var decal := preload("res://lib/actor/effect_area.tscn").instantiate() as Decal
 			decal.position = Vector3.ZERO
 			_effect_decals.add_child(decal)
 		else:
-			for i in range(1, card.effect.range_tiles + 1):
+			for i in range(1, card.range_tiles + 1):
 				for vec in CARDINALS:
 					var decal := preload("res://lib/actor/range_area.tscn").instantiate() as Decal
 					decal.position = vec * i
@@ -86,7 +86,7 @@ func _prepare_card_decals() -> void:
 						_range_decals.add_child(decal)
 
 			_effect_decals.add_child(preload("res://lib/actor/effect_area.tscn").instantiate() as Decal)
-			for i in range(1, card.effect.radius_tiles):
+			for i in range(1, card.radius_tiles):
 				for vec in CARDINALS:
 					var decal := preload("res://lib/actor/effect_area.tscn").instantiate() as Decal
 					decal.position = vec * i
@@ -141,7 +141,7 @@ func _update_effect_decals() -> void:
 	var game := Game.instance
 	if game.active_card:
 		var card := game.active_card.card
-		var range_tiles := card.effect.range_tiles
+		var range_tiles := card.range_tiles
 		var target_tile := _get_cursor_coordinate()
 		if card.is_self():
 			target_tile = coordinate
@@ -150,7 +150,7 @@ func _update_effect_decals() -> void:
 		var distance := absi(coordinate.x - target_tile.x) + absi(coordinate.z - target_tile.z)
 		# todo: maybe range check should be moved into is_valid? or separate
 		# method?
-		var valid := distance <= card.effect.range_tiles and (distance > 0 or card.is_self()) and card.effect.is_valid(self, target_tile)
+		var valid := distance <= card.range_tiles and (distance > 0 or card.is_self()) and card.is_valid(self, target_tile)
 		var decal_cl := Color.GREEN if valid else Color.RED
 		for decal: Decal in _effect_decals.get_children():
 			decal.modulate = decal_cl

@@ -32,7 +32,7 @@ var _editor_last_snap: Vector3 = Vector3.INF
 
 func can_cast_card_to(card: Card, target_tile: Vector3i) -> bool:
 	var distance_tiles := distance_to_tile(target_tile)
-	return card.effect.range_tiles >= distance_tiles and card.effect.is_valid(self, target_tile)
+	return card.range_tiles >= distance_tiles and card.is_valid(self, target_tile)
 
 
 func distance_to_tile(pos: Vector3i) -> int:

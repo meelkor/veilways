@@ -2,6 +2,7 @@ class_name Enums
 extends Object
 
 enum CardFamily {
+	GENERIC,
 	SWORD,
 	SHIELD,
 	BOOK,

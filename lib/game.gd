@@ -76,13 +76,15 @@ func get_tile_actor(tile: Vector3i) -> Actor:
 		return _npcs.get(Utils.get_tile_key(tile), null)
 
 
-func deal_damage(_source_actor: Actor, target_actor: Actor, number: EffectNumber) -> void:
+func deal_damage(source_actor: Actor, target_actor: Actor, number: EffectNumber) -> void:
+	Messages.now.send_template("[[0.name]] dealt %s damage to [[1.name]]." % number.to_template(), [source_actor, target_actor])
 	target_actor.hp = maxi(0, target_actor.hp - number.total)
 	if target_actor.hp == 0:
 		kill(target_actor)
 
 
 func grant_temp_hp(target_actor: Actor, number: EffectNumber) -> void:
+	Messages.now.send_template("[[0.name]] gained %s temporary HP." % number.to_template(), [target_actor])
 	target_actor.temp_hp += mini(number.total, target_actor.max_hp)
 
 
@@ -90,11 +92,11 @@ func kill(actor: Actor) -> void:
 	actor.dead = true
 	var npc := actor as Npc
 	if npc:
+		Messages.now.send_template("[[0.name]] died.", [actor])
 		_npcs.erase(Utils.get_tile_key(npc.coordinate))
 		npc.queue_free()
 	else:
 		get_tree().quit()
-
 
 
 ## Return true if neither player or NPCs is currently moving
@@ -201,7 +203,6 @@ func _do_npc_logic() -> void:
 func _fill_all_active_hands() -> void:
 	for actor in player.find_active_actors():
 		actor.deck.fill_hand()
-
 
 
 func _enter_tree() -> void:

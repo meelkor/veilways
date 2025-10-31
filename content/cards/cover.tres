@@ -1,17 +1,12 @@
-[gd_resource type="Resource" script_class="Card" load_steps=5 format=3 uid="uid://sx1ic2jkylu"]
+[gd_resource type="Resource" script_class="Card_Deal" load_steps=3 format=3 uid="uid://sx1ic2jkylu"]
 
 [ext_resource type="Script" uid="uid://dd6vpnwl2234m" path="res://lib/condition/condition.gd" id="1_r12qx"]
-[ext_resource type="Script" uid="uid://rx7tm062e4w" path="res://lib/cards/card_effect_deal.gd" id="2_00vxe"]
-[ext_resource type="Script" uid="uid://bvk7isnhf4iqe" path="res://lib/cards/card.gd" id="3_yf83w"]
-
-[sub_resource type="Resource" id="Resource_r12qx"]
-script = ExtResource("2_00vxe")
-color = 1
-temp_hp = 2
-metadata/_custom_type_script = "uid://rx7tm062e4w"
+[ext_resource type="Script" uid="uid://dyt56ms0x1dcw" path="res://lib/cards/card_deal.gd" id="2_xclis"]
 
 [resource]
-script = ExtResource("3_yf83w")
+script = ExtResource("2_xclis")
+color = 1
+temp_hp = 2
 name = "Cover"
-effect = SubResource("Resource_r12qx")
+family = 2
 metadata/_custom_type_script = "uid://bvk7isnhf4iqe"

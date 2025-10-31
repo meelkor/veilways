@@ -28,7 +28,7 @@ class UseCard:
 
 
 	func do_action(actor: Actor) -> bool:
-		if pointer.card.effect.is_valid(actor, target_tile):
+		if pointer.card.is_valid(actor, target_tile):
 			await actor.cast_card(pointer, target_tile)
 			return true
 		else:
