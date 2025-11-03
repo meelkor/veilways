@@ -170,7 +170,7 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	for npc: Npc in find_children("", "Npc"):
-		_npcs[Utils.get_tile_key(npc.position)] = npc
+		_npcs[npc.tile_key] = npc
 	# wait for active area to detect actors, dunno why two frames are needed
 	await get_tree().physics_frame
 	await get_tree().physics_frame

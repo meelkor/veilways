@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=3 uid="uid://db31qo5ehi165"]
+
+[ext_resource type="PackedScene" uid="uid://3mto5kqu5sbn" path="res://lib/actor/actor.tscn" id="1_dtf2f"]
+[ext_resource type="Script" uid="uid://bypkhd8116weg" path="res://lib/actor/npc.gd" id="2_c5cox"]
+[ext_resource type="PackedScene" uid="uid://dddrt4paeru7q" path="res://ui/hp_bar/hp_bar.tscn" id="3_31vvi"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_c5cox"]
+resource_local_to_scene = true
+
+[node name="Npc" unique_id=793530510 instance=ExtResource("1_dtf2f")]
+script = ExtResource("2_c5cox")
+npc_name = ""
+
+[node name="CollisionShape3D" parent="StaticBody3D" parent_id_path=PackedInt32Array(470150517) index="0" unique_id=1702974316]
+shape = SubResource("CapsuleShape3D_c5cox")
+
+[node name="HpBarWrapper" type="Control" parent="." index="1" unique_id=895894491]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+
+[node name="HpBar" parent="HpBarWrapper" index="0" unique_id=1068573325 node_paths=PackedStringArray("actor") instance=ExtResource("3_31vvi")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -31.75
+offset_top = -4.0
+offset_right = 31.75
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+actor = NodePath("../..")
+
+[node name="SelfRayCast" type="RayCast3D" parent="." index="2" unique_id=1283908213]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+target_position = Vector3(0, -5, 0)
+collision_mask = 8
+hit_back_faces = false

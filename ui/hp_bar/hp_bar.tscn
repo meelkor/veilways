@@ -1,34 +1,36 @@
-[gd_scene load_steps=9 format=3 uid="uid://dddrt4paeru7q"]
+[gd_scene load_steps=10 format=3 uid="uid://dddrt4paeru7q"]
 
 [ext_resource type="Script" uid="uid://5mo11dxl2e4d" path="res://ui/hp_bar/hp_bar.gd" id="1_xfh1i"]
 [ext_resource type="Texture2D" uid="uid://bjkmlg1kv5lmf" path="res://resources/temp_hp.png" id="2_lsnvh"]
-[ext_resource type="Texture2D" uid="uid://cw1lcxrxta4i" path="res://resources/temp_hp_overlay.png" id="2_uvt3w"]
+[ext_resource type="StyleBox" uid="uid://cwg3okbapicyy" path="res://ui/hp_bar/hp_bar_temp_hp_large.tres" id="2_uvt3w"]
+[ext_resource type="FontFile" uid="uid://c8yypb76gkt3u" path="res://fonts/GentiumBookPlus-Bold.ttf" id="4_uvt3w"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lsnvh"]
+bg_color = Color(0.12225222, 0.12225225, 0.12225217, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rwdkh"]
 bg_color = Color(1, 0.34051147, 0.30032542, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rfgq4"]
-texture = ExtResource("2_uvt3w")
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-modulate_color = Color(1, 0.82627416, 0.6998268, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uvt3w"]
 texture = ExtResource("2_lsnvh")
 
 [sub_resource type="LabelSettings" id="LabelSettings_kxbic"]
+font = ExtResource("4_uvt3w")
 outline_size = 4
 outline_color = Color(0.080783345, 0.080783345, 0.080783345, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_rwdkh"]
-font_size = 12
+font = ExtResource("4_uvt3w")
+font_size = 14
+font_color = Color(0.8776157, 0.8776158, 0.8776157, 1)
 outline_size = 4
-outline_color = Color(0, 0, 0, 1)
+outline_color = Color(0, 0, 0, 0.8352941)
 
 [node name="HpBar" type="Panel" unique_id=1068573325]
-custom_minimum_size = Vector2(100, 4)
-offset_right = 100.0
-offset_bottom = 24.0
+custom_minimum_size = Vector2(60, 4)
+offset_right = 110.0
+offset_bottom = 16.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_lsnvh")
 script = ExtResource("1_xfh1i")
 
 [node name="HpLine" type="Panel" parent="." unique_id=1421428863]
@@ -36,20 +38,20 @@ unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 62.0
+offset_right = 66.0
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_rwdkh")
 
 [node name="TempHpLine" type="Panel" parent="." unique_id=1235167842]
 unique_name_in_owner = true
-texture_repeat = 2
+modulate = Color(1, 0.827451, 0.69803923, 1)
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 44.0
+offset_right = 33.0
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_rfgq4")
+theme_override_styles/panel = ExtResource("2_uvt3w")
 
 [node name="TempHpShield" type="Control" parent="." unique_id=1143220195]
 unique_name_in_owner = true
@@ -69,8 +71,8 @@ anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = -10.0
 offset_top = -17.0
-offset_right = 24.0
-offset_bottom = 17.0
+offset_right = 23.0
+offset_bottom = 16.0
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxTexture_uvt3w")
@@ -83,24 +85,21 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "20"
+text = "30"
 label_settings = SubResource("LabelSettings_kxbic")
 horizontal_alignment = 1
-vertical_alignment = 3
+vertical_alignment = 1
 
 [node name="HpLabel" type="Label" parent="." unique_id=2088991772]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.5
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -12.0
-offset_bottom = 10.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 1
-text = "1/1"
+text = "60/100"
 label_settings = SubResource("LabelSettings_rwdkh")
 horizontal_alignment = 1
-vertical_alignment = 3
+vertical_alignment = 1

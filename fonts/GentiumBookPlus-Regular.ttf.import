@@ -2,19 +2,19 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dj4x3yj2p8a7d"
-path="res://.godot/imported/Texturina-VariableFont_opsz,wght.ttf-f2942903309554e186d989f3ec0d066d.fontdata"
+uid="uid://c1s22bmdsieao"
+path="res://.godot/imported/GentiumBookPlus-Regular.ttf-1e31d50be2cbff0b96810472de8033a6.fontdata"
 
 [deps]
 
-source_file="res://fonts/Texturina-VariableFont_opsz,wght.ttf"
-dest_files=["res://.godot/imported/Texturina-VariableFont_opsz,wght.ttf-f2942903309554e186d989f3ec0d066d.fontdata"]
+source_file="res://fonts/GentiumBookPlus-Regular.ttf"
+dest_files=["res://.godot/imported/GentiumBookPlus-Regular.ttf-1e31d50be2cbff0b96810472de8033a6.fontdata"]
 
 [params]
 
 Rendering=null
 antialiasing=1
-generate_mipmaps=false
+generate_mipmaps=true
 disable_embedded_bitmaps=true
 multichannel_signed_distance_field=false
 msdf_pixel_range=8
@@ -25,12 +25,17 @@ modulate_color_glyphs=false
 hinting=1
 subpixel_positioning=4
 keep_rounding_remainders=true
-oversampling=0.0
+oversampling=2.0
 Fallbacks=null
 fallbacks=[]
 Compress=null
 compress=true
-preload=[]
+preload=[{
+"chars": [],
+"glyphs": [],
+"name": "New Configuration",
+"size": Vector2i(16, 0)
+}]
 language_support={}
 script_support={}
 opentype_features={}

@@ -33,15 +33,16 @@ window/stretch/aspect="keep_height"
 [gui]
 
 theme/custom="uid://bt1wtnycqamh0"
-theme/custom_font="uid://dj4x3yj2p8a7d"
+theme/custom_font="uid://c1s22bmdsieao"
 
 [layer_names]
 
 3d_physics/layer_1="World"
 3d_physics/layer_4="Actors"
+3d_physics/layer_5="Mouse"
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="mobile"
 textures/decals/filter=2
+2d/snap/snap_2d_transforms_to_pixel=true

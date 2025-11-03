@@ -2,6 +2,8 @@
 class_name Actor
 extends Node3D
 
+signal hovered(hover: bool)
+
 @export var deck: Deck
 
 @export var max_hp: int:
@@ -12,8 +14,6 @@ extends Node3D
 @export var dead: bool
 
 @export var temp_hp: int
-
-@export var _body: StaticBody3D
 
 var coordinate: Vector3i = Vector3i.ZERO:
 	get():
@@ -27,8 +27,13 @@ var tile_key: int:
 	get():
 		return Utils.get_tile_key(coordinate)
 
+var damaged: bool:
+	get():
+		return hp != max_hp or temp_hp > 0
+
 var _editor_last_snap: Vector3 = Vector3.INF
 
+var _hovered: bool
 
 func can_cast_card_to(card: Card, target_tile: Vector3i) -> bool:
 	var distance_tiles := distance_to_tile(target_tile)
@@ -97,23 +102,14 @@ func _process(_delta: float) -> void:
 			_editor_last_snap = position
 
 
-func _enter_tree() -> void:
-	# Create the collision body used to detect actors nearby player. Make into
-	# scene?
-	if not Engine.is_editor_hint() and not _body:
-		_body = StaticBody3D.new()
-		var col_shape := CollisionShape3D.new()
-		var shape := SphereShape3D.new()
-		shape.radius = 0.25
-		col_shape.shape = shape
-		_body.add_child(col_shape)
-		_body.collision_mask = 0
-		_body.collision_layer = 0b1000
-		add_child(_body)
-		_body.owner = self
-		_body.name = "BodyOf%s" % to_string()
-		col_shape.owner = self
+func _on_static_body_3d_mouse_entered() -> void:
+	_hovered = true
+	hovered.emit(true)
 
+
+func _on_static_body_3d_mouse_exited() -> void:
+	_hovered = false
+	hovered.emit(false)
 
 func _get_max_hp() -> int:
 	return max_hp
