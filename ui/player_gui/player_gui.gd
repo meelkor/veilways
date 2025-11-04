@@ -27,3 +27,8 @@ func _ready() -> void:
 		_draw_pile_button.text = "%s cards" % len(player.deck.draw_pile)
 		_discard_pile_button.text = "%s cards" % len(player.deck.discard_pile)
 	)
+
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("cancel"):
+		Game.instance.active_card = null
