@@ -15,6 +15,10 @@ signal hovered(hover: bool)
 
 @export var temp_hp: int
 
+@export var allegiance: Allegiance
+
+@export var shape: CollisionShape3D
+
 var coordinate: Vector3i = Vector3i.ZERO:
 	get():
 		return Vector3i(
@@ -34,6 +38,8 @@ var damaged: bool:
 var _editor_last_snap: Vector3 = Vector3.INF
 
 var _hovered: bool
+
+var _body: StaticBody3D
 
 func can_cast_card_to(card: Card, target_tile: Vector3i) -> bool:
 	var distance_tiles := distance_to_tile(target_tile)
@@ -92,6 +98,14 @@ func _ready() -> void:
 			# deck is optional, create empty deck if not provided
 			deck = Deck.new()
 
+		_body = StaticBody3D.new()
+		add_child(_body)
+		_body.owner = self
+		shape.reparent(_body)
+		_body.mouse_entered.connect(_on_static_body_3d_mouse_entered)
+		_body.mouse_exited.connect(_on_static_body_3d_mouse_exited)
+		_body.collision_layer = 0b1000
+
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint() and is_inside_tree() and get_tree().edited_scene_root != self:
@@ -113,3 +127,9 @@ func _on_static_body_3d_mouse_exited() -> void:
 
 func _get_max_hp() -> int:
 	return max_hp
+
+
+enum Allegiance {
+	Player,
+	Monsters,
+}

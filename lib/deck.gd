@@ -1,7 +1,7 @@
 class_name Deck
 extends Resource
 
-const HAND_SIZE = 5
+@export_range(1, 10, 1) var hand_size: int = 5
 
 ## LIFO (0 = bottom)
 @export var draw_pile: Array[Card]
@@ -15,7 +15,7 @@ const HAND_SIZE = 5
 ## Try to fill hand from drawing deck, shuffling discard pile into it if
 ## necessary.
 func fill_hand() -> void:
-	var to_add := HAND_SIZE - hand.size()
+	var to_add := hand_size - hand.size()
 	if to_add > 0:
 		var to_draw := mini(draw_pile.size(), to_add)
 		var slice_start := draw_pile.size() - to_draw
@@ -40,7 +40,6 @@ func get_pointer(index: int) -> Pointer:
 	pointer.deck = self
 	pointer.hand_index = index
 	return pointer
-
 
 
 ## Structure pointing to single card in this deck.

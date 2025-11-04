@@ -20,17 +20,6 @@ var movement_direction: Vector3:
 ## untder cursor)
 @onready var _effect_decals := $EffectDecals as Node3D
 
-@onready var _active_area := $ActiveArea as Area3D
-
-
-## Only actors near player are considered active. Based on _active_area radius.
-## Maybe usage of physics is overkill and I should manually go through all
-## tiles in that radius.
-func find_active_actors() -> Array[Actor]:
-	var out: Array[Actor]
-	out.assign(_active_area.get_overlapping_bodies().map(func (col: Node3D) -> Actor: return col.get_parent()))
-	return out
-
 
 func _ready() -> void:
 	super._ready()

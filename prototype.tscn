@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bpucn2eh2yu6"]
+[gd_scene load_steps=14 format=3 uid="uid://bpucn2eh2yu6"]
 
 [ext_resource type="Script" uid="uid://c510cuhpkowl8" path="res://lib/overworld/overworld.gd" id="1_883nb"]
 [ext_resource type="Script" uid="uid://o4hghbxwqbn2" path="res://lib/game.gd" id="1_mbk3n"]
@@ -15,11 +15,25 @@ script = ExtResource("4_1ixuk")
 draw_pile = Array[ExtResource("3_mbk3n")]([ExtResource("4_bk8nm"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_bk8nm"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_8y2k3")])
 metadata/_custom_type_script = "uid://dmdhu2kxcbu8s"
 
+[sub_resource type="Resource" id="Resource_bk8nm"]
+resource_local_to_scene = true
+script = ExtResource("4_1ixuk")
+hand_size = 2
+draw_pile = Array[ExtResource("3_mbk3n")]([ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_bk8nm"), ExtResource("4_bk8nm")])
+metadata/_custom_type_script = "uid://dmdhu2kxcbu8s"
+
 [sub_resource type="Environment" id="Environment_8y2k3"]
 background_mode = 1
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
 ambient_light_energy = 0.2
+
+[sub_resource type="Resource" id="Resource_bjtid"]
+resource_local_to_scene = true
+script = ExtResource("4_1ixuk")
+hand_size = 2
+draw_pile = Array[ExtResource("3_mbk3n")]([ExtResource("4_8y2k3"), ExtResource("4_8y2k3"), ExtResource("4_bk8nm"), ExtResource("4_bk8nm")])
+metadata/_custom_type_script = "uid://dmdhu2kxcbu8s"
 
 [node name="Game" type="Node" unique_id=186556829 node_paths=PackedStringArray("player", "overworld")]
 script = ExtResource("1_mbk3n")
@@ -35,6 +49,7 @@ hp = 18
 
 [node name="Critter" parent="." unique_id=717241545 instance=ExtResource("2_bk8nm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.5, 1, -0.5)
+deck = SubResource("Resource_bk8nm")
 
 [node name="Overworld" type="Node3D" parent="." unique_id=932999791 node_paths=PackedStringArray("grid_map")]
 script = ExtResource("1_883nb")
@@ -57,3 +72,7 @@ metadata/_editor_floor_ = Vector3(0, -1, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Overworld" unique_id=2119531633]
 environment = SubResource("Environment_8y2k3")
+
+[node name="Critter2" parent="." unique_id=793530510 instance=ExtResource("2_bk8nm")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2.5, 2.9802323e-09, 1.5)
+deck = SubResource("Resource_bjtid")

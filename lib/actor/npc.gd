@@ -4,6 +4,8 @@ extends Actor
 
 @export var npc_name: String
 
+@export var target_actor: Actor
+
 @onready var _hp_bar_wrapper := %HpBarWrapper as Control
 @onready var _hp_bar := %HpBar as HpBar
 @onready var _self_ray_cast := $SelfRayCast as RayCast3D
@@ -25,6 +27,10 @@ func _process(delta: float) -> void:
 			var pos2d := camera.unproject_position(pos3d)
 			_hp_bar_wrapper.global_position = pos2d
 			_hp_bar.visible = _hovered or damaged
+	else:
+		# ensure deck is always local to scene... maybe there's better way?
+		if deck:
+			deck.resource_local_to_scene = true
 
 
 func _update_hp_bar_size(large: bool) -> void:

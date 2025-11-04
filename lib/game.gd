@@ -166,6 +166,13 @@ func try_move_in_direction(actor: Actor, direction: Vector3) -> bool:
 	return false
 
 
+func find_active_actors() -> Array[Actor]:
+	# todo introduce index:
+	var actors: Array[Actor] = [player]
+	actors.append_array(_npcs.values())
+	return actors
+
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
@@ -185,23 +192,27 @@ func _process(_delta: float) -> void:
 ## Called after each player's turn (even cooldown one). Expire buffs, temp
 ## health etc.
 func _do_start_of_turn_logic() -> void:
-	for actor in player.find_active_actors():
+	for actor in find_active_actors():
 		actor.temp_hp = maxi(actor.temp_hp - 1, 0)
 	_fill_all_active_hands()
 
 
 func _do_npc_logic() -> void:
-	for npc_key: int in _npcs:
-		var npc := _npcs[npc_key]
+	for npc: Npc in find_active_actors().filter(_is_npc):
+		var npc_key := npc.tile_key
 		if npc.visible:
 			await try_move_in_direction(npc, player.position - npc.position)
 			_npcs.erase(npc_key)
 			_npcs[npc.tile_key] = npc
 
 
+func _is_npc(actor: Actor) -> bool:
+	return actor is Npc
+
+
 ## Fill hand for all active actors (player + npcs)
 func _fill_all_active_hands() -> void:
-	for actor in player.find_active_actors():
+	for actor in find_active_actors():
 		actor.deck.fill_hand()
 
 

@@ -1,37 +1,36 @@
-[gd_scene load_steps=8 format=3 uid="uid://md4bsr6o7mmf"]
+[gd_scene load_steps=9 format=3 uid="uid://md4bsr6o7mmf"]
 
 [ext_resource type="PackedScene" uid="uid://db31qo5ehi165" path="res://lib/actor/npc.tscn" id="1_c5mqb"]
 [ext_resource type="Script" uid="uid://bvk7isnhf4iqe" path="res://lib/cards/card.gd" id="2_518xe"]
 [ext_resource type="Resource" uid="uid://ogd6w3xilsd0" path="res://content/cards/slash.tres" id="3_re20y"]
 [ext_resource type="Script" uid="uid://dmdhu2kxcbu8s" path="res://lib/deck.gd" id="4_lxfoi"]
+[ext_resource type="Resource" uid="uid://sx1ic2jkylu" path="res://content/cards/cover.tres" id="4_re20y"]
 
 [sub_resource type="Resource" id="Resource_6ebex"]
-script = ExtResource("4_lxfoi")
-draw_pile = Array[ExtResource("2_518xe")]([ExtResource("3_re20y"), ExtResource("3_re20y")])
-metadata/_custom_type_script = "uid://dmdhu2kxcbu8s"
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2wxry"]
 resource_local_to_scene = true
-radius = 0.38549805
-height = 0.7709961
+script = ExtResource("4_lxfoi")
+hand_size = 2
+draw_pile = Array[ExtResource("2_518xe")]([ExtResource("3_re20y"), ExtResource("3_re20y"), ExtResource("4_re20y"), ExtResource("4_re20y")])
+metadata/_custom_type_script = "uid://dmdhu2kxcbu8s"
 
 [sub_resource type="TorusMesh" id="TorusMesh_8k7wk"]
 inner_radius = 0.2
 outer_radius = 0.4
 
-[node name="Npc" unique_id=793530510 instance=ExtResource("1_c5mqb")]
+[sub_resource type="BoxShape3D" id="BoxShape3D_re20y"]
+size = Vector3(0.88879395, 0.3284912, 0.8054199)
+
+[node name="Critter" unique_id=793530510 node_paths=PackedStringArray("shape") instance=ExtResource("1_c5mqb")]
 npc_name = "Critter"
 deck = SubResource("Resource_6ebex")
 max_hp = 10
-hp = 10
+allegiance = 1
+shape = NodePath("CollisionShape3D")
 
-[node name="StaticBody3D" parent="." index="0" unique_id=470150517]
-collision_layer = 8
-
-[node name="CollisionShape3D" parent="StaticBody3D" index="0" unique_id=1702974316]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2173686, 0)
-shape = SubResource("CapsuleShape3D_2wxry")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="1" unique_id=1605560861]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="0" unique_id=1605560861]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13664341, 0)
 mesh = SubResource("TorusMesh_8k7wk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="3" unique_id=775810134]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03656006, 0.14788818, -0.012817383)
+shape = SubResource("BoxShape3D_re20y")

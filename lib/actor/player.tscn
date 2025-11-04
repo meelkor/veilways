@@ -1,15 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://d1t48fst4j8t5"]
+[gd_scene load_steps=8 format=3 uid="uid://d1t48fst4j8t5"]
 
 [ext_resource type="Script" uid="uid://ba4urehi1a11d" path="res://lib/actor/player.gd" id="1_lx7nv"]
 [ext_resource type="PackedScene" uid="uid://3mto5kqu5sbn" path="res://lib/actor/actor.tscn" id="1_qv1bj"]
 [ext_resource type="Texture2D" uid="uid://b7vnuxoxfcscl" path="res://resources/movement_arrow.png" id="2_hps26"]
 [ext_resource type="PackedScene" uid="uid://bothi5fsfftgq" path="res://ui/player_gui/player_gui.tscn" id="3_qv1bj"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_52jb7"]
-resource_local_to_scene = true
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_htr1n"]
-radius = 20.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_883nb"]
 diffuse_mode = 3
@@ -20,39 +14,38 @@ material = SubResource("StandardMaterial3D_883nb")
 radius = 0.4
 height = 1.8
 
-[node name="Player" unique_id=793530510 instance=ExtResource("1_qv1bj")]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_52jb7"]
+radius = 0.41015625
+height = 1.7436523
+
+[node name="Player" unique_id=793530510 node_paths=PackedStringArray("shape") instance=ExtResource("1_qv1bj")]
 script = ExtResource("1_lx7nv")
+shape = NodePath("CollisionShape3D")
 
-[node name="CollisionShape3D" parent="StaticBody3D" parent_id_path=PackedInt32Array(470150517) index="0" unique_id=1702974316]
-shape = SubResource("CapsuleShape3D_52jb7")
-
-[node name="ActiveArea" type="Area3D" parent="." index="3" unique_id=404378020]
-collision_layer = 0
-collision_mask = 8
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ActiveArea" index="0" unique_id=2057823546]
-shape = SubResource("SphereShape3D_htr1n")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="4" unique_id=1560932378]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="0" unique_id=1560932378]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8443577, 0)
 layers = 2
 mesh = SubResource("CapsuleMesh_crejn")
 
-[node name="Camera3D" type="Camera3D" parent="." index="5" unique_id=418307194]
+[node name="Camera3D" type="Camera3D" parent="." index="1" unique_id=418307194]
 transform = Transform3D(-0.70710677, -0.57060707, 0.41762128, 0, 0.5906057, 0.8069603, -0.70710677, 0.57060707, -0.41762128, 2.5, 5.4, -2.5)
 projection = 1
 current = true
 size = 12.0
 
-[node name="Arrow" type="Decal" parent="." index="6" unique_id=1026966781]
+[node name="Arrow" type="Decal" parent="." index="2" unique_id=1026966781]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2206546)
 size = Vector3(1, 1, 1)
 texture_albedo = ExtResource("2_hps26")
 albedo_mix = 0.9
 
-[node name="RangeDecals" type="Node3D" parent="." index="7" unique_id=37140428]
+[node name="RangeDecals" type="Node3D" parent="." index="3" unique_id=37140428]
 
-[node name="EffectDecals" type="Node3D" parent="." index="8" unique_id=1482261389]
+[node name="EffectDecals" type="Node3D" parent="." index="4" unique_id=1482261389]
 top_level = true
 
-[node name="PlayerGui" parent="." index="9" unique_id=1997076290 instance=ExtResource("3_qv1bj")]
+[node name="PlayerGui" parent="." index="5" unique_id=1997076290 instance=ExtResource("3_qv1bj")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="6" unique_id=1934312909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8718262, 0)
+shape = SubResource("CapsuleShape3D_52jb7")

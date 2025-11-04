@@ -1,20 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://3mto5kqu5sbn"]
+[gd_scene load_steps=2 format=3 uid="uid://3mto5kqu5sbn"]
 
 [ext_resource type="Script" uid="uid://oaumavmt3u5t" path="res://lib/actor/actor.gd" id="1_384xv"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dtf2f"]
-resource_local_to_scene = true
-
 [node name="Actor" type="Node3D" unique_id=793530510]
 script = ExtResource("1_384xv")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=470150517]
-collision_layer = 24
-collision_mask = 0
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1702974316]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_dtf2f")
-
-[connection signal="mouse_entered" from="StaticBody3D" to="." method="_on_static_body_3d_mouse_entered"]
-[connection signal="mouse_exited" from="StaticBody3D" to="." method="_on_static_body_3d_mouse_exited"]
